@@ -41,9 +41,9 @@ Utilizamos uma escala de rosa/roxo que remete ao tema de dança:
 
 ## 📐 Espaçamento e Layout
 
-### Sistema de Grid
-- Layout responsivo baseado em colunas do Tailwind/Nuxt UI.
-- Desktop: Sidebar de navegação (1/4) e Área de conteúdo (3/4).
+### Sistema de Layout (Flexbox)
+- Layout responsivo baseado no modelo Flexbox do CSS / Nuxt UI.
+- Desktop: Alinhamento Flex com Sidebar de navegação (largura fixa ou 25%) e Área de conteúdo (flex-grow ou 75%).
 - Mobile: Coluna única com Stepper horizontal no topo.
 
 ### Bordas e Sombras
