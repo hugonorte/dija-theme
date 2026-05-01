@@ -44,28 +44,28 @@ const safePosts = computed(() => {
     <UPageSection v-else title="Posts Recentes" description="Acompanhe as últimas postagens sobre dança de salão.">
       <div v-if="safePosts.length > 0" class="flex flex-wrap -mx-4">
         <!-- Loop de Posts usando FLEX como solicitado -->
-        <div 
-          v-for="post in safePosts" 
-          :key="post.id" 
+        <div
+          v-for="post in safePosts"
+          :key="post.id"
           class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8 flex"
         >
-          <UCard 
+          <UCard
             class="flex-1 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-primary/10"
           >
             <!-- Título do Post -->
             <template #header>
-              <h3 
-                class="text-xl font-bold text-primary line-clamp-2" 
-                v-html="post.title.rendered" 
+              <h3
+                class="text-xl font-bold text-primary line-clamp-2"
+                v-html="post.title.rendered"
               />
             </template>
-            
+
             <!-- Resumo (Excerpt) -->
-            <div 
-              class="flex-1 text-sm text-muted line-clamp-3 mb-4" 
-              v-html="post.excerpt.rendered" 
+            <div
+              class="flex-1 text-sm text-muted line-clamp-3 mb-4"
+              v-html="post.excerpt.rendered"
             />
-            
+
             <!-- Rodapé com Data e Botão -->
             <template #footer>
               <div class="flex justify-between items-center w-full">
@@ -73,10 +73,10 @@ const safePosts = computed(() => {
                   <UIcon name="i-lucide-calendar" class="mr-1" />
                   {{ new Date(post.date).toLocaleDateString('pt-BR') }}
                 </div>
-                <UButton 
-                  :to="`/posts/${post.slug}`" 
-                  label="Ler mais" 
-                  variant="ghost" 
+                <UButton
+                  :to="`/posts/${post.slug}`"
+                  label="Ler mais"
+                  variant="ghost"
                   trailing-icon="i-lucide-arrow-right"
                   color="primary"
                 />
@@ -85,7 +85,7 @@ const safePosts = computed(() => {
           </UCard>
         </div>
       </div>
-      
+
       <!-- Caso não haja posts -->
       <div v-else class="text-center py-10 text-muted">
         Nenhum post encontrado no momento. Comece a escrever no seu WordPress!
