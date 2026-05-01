@@ -14,6 +14,7 @@ useSeoMeta({
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <UContainer class="py-10 max-w-4xl">
     <!-- Botão de Voltar -->
     <div class="mb-8">
@@ -27,13 +28,24 @@ useSeoMeta({
     </div>
 
     <!-- Estado de Carregamento -->
-    <div v-if="status === 'pending'" class="flex flex-col items-center justify-center py-20">
-      <UIcon name="i-lucide-loader-2" class="animate-spin size-12 text-primary mb-4" />
-      <p class="text-lg text-muted">Buscando o conteúdo do post...</p>
+    <div
+      v-if="status === 'pending'"
+      class="flex flex-col items-center justify-center py-20"
+    >
+      <UIcon
+        name="i-lucide-loader-2"
+        class="animate-spin size-12 text-primary mb-4"
+      />
+      <p class="text-lg text-muted">
+        Buscando o conteúdo do post...
+      </p>
     </div>
 
     <!-- Estado de Erro -->
-    <div v-else-if="error || !post" class="py-10">
+    <div
+      v-else-if="error || !post"
+      class="py-10"
+    >
       <UAlert
         color="error"
         variant="subtle"
@@ -44,17 +56,30 @@ useSeoMeta({
     </div>
 
     <!-- Conteúdo do Post -->
-    <article v-else class="post-content">
+    <article
+      v-else
+      class="post-content"
+    >
       <header class="mb-10">
-        <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight" v-html="post.title.rendered" />
-        
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <h1
+          class="text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight"
+          v-html="post.title.rendered"
+        />
+
         <div class="flex items-center gap-4 text-sm text-muted">
           <div class="flex items-center">
-            <UIcon name="i-lucide-calendar" class="mr-1" />
+            <UIcon
+              name="i-lucide-calendar"
+              class="mr-1"
+            />
             {{ new Date(post.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) }}
           </div>
           <div class="flex items-center">
-            <UIcon name="i-lucide-clock" class="mr-1" />
+            <UIcon
+              name="i-lucide-clock"
+              class="mr-1"
+            />
             Leitura rápida
           </div>
         </div>
@@ -62,7 +87,11 @@ useSeoMeta({
 
       <!-- Corpo do Post (WordPress HTML) -->
       <UPageBody class="prose prose-primary dark:prose-invert max-w-none">
-        <div class="wp-content" v-html="post.content.rendered" />
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div
+          class="wp-content"
+          v-html="post.content.rendered"
+        />
       </UPageBody>
 
       <UDivider class="my-12" />
@@ -70,8 +99,12 @@ useSeoMeta({
       <!-- Footer do Post / Compartilhamento -->
       <footer class="flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <p class="font-medium text-lg">Gostou deste conteúdo?</p>
-          <p class="text-muted">Aulas de dança de salão com Dijaina Ferreira.</p>
+          <p class="font-medium text-lg">
+            Gostou deste conteúdo?
+          </p>
+          <p class="text-muted">
+            Aulas de dança de salão com Dijaina Ferreira.
+          </p>
         </div>
         <UButton
           label="Agendar Aula"
@@ -116,7 +149,7 @@ useSeoMeta({
   ul, ol {
     margin-bottom: 1.5rem;
     padding-left: 1.5rem;
-    
+
     li {
       margin-bottom: 0.5rem;
     }

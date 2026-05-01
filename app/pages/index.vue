@@ -13,6 +13,7 @@ const safePosts = computed(() => {
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <UContainer>
     <!-- Hero Section: Identidade da Dijaina -->
     <UPageHero
@@ -24,7 +25,10 @@ const safePosts = computed(() => {
     <!-- Estado de Carregamento -->
     <UPageSection v-if="status === 'pending'">
       <div class="flex items-center justify-center py-20">
-        <UIcon name="i-lucide-loader-2" class="animate-spin size-10 text-primary" />
+        <UIcon
+          name="i-lucide-loader-2"
+          class="animate-spin size-10 text-primary"
+        />
         <span class="ml-3 text-lg text-muted">Buscando novidades no salão...</span>
       </div>
     </UPageSection>
@@ -41,8 +45,15 @@ const safePosts = computed(() => {
     </UPageSection>
 
     <!-- Lista de Posts -->
-    <UPageSection v-else title="Posts Recentes" description="Acompanhe as últimas postagens sobre dança de salão.">
-      <div v-if="safePosts.length > 0" class="flex flex-wrap -mx-4">
+    <UPageSection
+      v-else
+      title="Posts Recentes"
+      description="Acompanhe as últimas postagens sobre dança de salão."
+    >
+      <div
+        v-if="safePosts.length > 0"
+        class="flex flex-wrap -mx-4"
+      >
         <!-- Loop de Posts usando FLEX como solicitado -->
         <div
           v-for="post in safePosts"
@@ -54,6 +65,7 @@ const safePosts = computed(() => {
           >
             <!-- Título do Post -->
             <template #header>
+              <!-- eslint-disable-next-line vue/no-v-html -->
               <h3
                 class="text-xl font-bold text-primary line-clamp-2"
                 v-html="post.title.rendered"
@@ -61,6 +73,7 @@ const safePosts = computed(() => {
             </template>
 
             <!-- Resumo (Excerpt) -->
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <div
               class="flex-1 text-sm text-muted line-clamp-3 mb-4"
               v-html="post.excerpt.rendered"
@@ -70,7 +83,10 @@ const safePosts = computed(() => {
             <template #footer>
               <div class="flex justify-between items-center w-full">
                 <div class="flex items-center text-xs text-muted">
-                  <UIcon name="i-lucide-calendar" class="mr-1" />
+                  <UIcon
+                    name="i-lucide-calendar"
+                    class="mr-1"
+                  />
                   {{ new Date(post.date).toLocaleDateString('pt-BR') }}
                 </div>
                 <UButton
@@ -87,7 +103,10 @@ const safePosts = computed(() => {
       </div>
 
       <!-- Caso não haja posts -->
-      <div v-else class="text-center py-10 text-muted">
+      <div
+        v-else
+        class="text-center py-10 text-muted"
+      >
         Nenhum post encontrado no momento. Comece a escrever no seu WordPress!
       </div>
     </UPageSection>
