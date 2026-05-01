@@ -31,8 +31,8 @@ Este job roda em cada push ou pull request para validar que o código está ínt
 7. **Upload Artifact**: Salva a pasta `.output/public`.
 
 ### Job 2: Deploy
-Este job possui uma condicional rigorosa para execução:
-**Condição**: `if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'dev'`
+Este job é acionado automaticamente em atualizações na branch principal ou via disparo manual:
+**Condição**: `if: github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'`
 
 1. **Download Artifact**: Recupera os arquivos gerados no job anterior.
 2. **Deploy via rsync**: Sincroniza os arquivos com o servidor Hostinger utilizando SSH.

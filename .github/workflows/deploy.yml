@@ -41,13 +41,8 @@ jobs:
   deploy:
     name: Deploy to dija.com.br (WordPress Theme Folder)
     needs: build
-    # Executa apenas se for um merge de PR da 'dev' para 'master' OU disparo manual
-    if: >
-      (github.event_name == 'pull_request' && 
-       github.event.pull_request.merged == true && 
-       github.event.pull_request.head.ref == 'dev' && 
-       github.event.pull_request.base.ref == 'master') ||
-      (github.event_name == 'workflow_dispatch')
+    # Executa apenas se houver um push na 'master' (incluindo merges) OU disparo manual
+    if: github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
     
     runs-on: ubuntu-latest
     steps:
