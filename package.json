@@ -4,9 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "generate": "nuxt generate",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "prepare": "husky",
+    "check-all": "sh scripts/check-before-push.sh",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
     "test": "vitest"
@@ -24,6 +27,7 @@
     "@vue/test-utils": "^2.4.10",
     "eslint": "^10.2.1",
     "happy-dom": "^20.9.0",
+    "husky": "^9.1.7",
     "sass": "^1.99.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5",

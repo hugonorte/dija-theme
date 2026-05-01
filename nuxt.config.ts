@@ -1,17 +1,15 @@
+/* eslint-disable nuxt/nuxt-config-keys-order */
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  runtimeConfig: {
-    public: {
-      wpApiUrl: process.env.NUXT_PUBLIC_WP_API_URL || 'https://dija.com.br/wp-json/wp/v2/'
-    }
-  },
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui'
   ],
 
-  devtools: {
-    enabled: true
+  runtimeConfig: {
+    public: {
+      wpApiUrl: process.env.NUXT_PUBLIC_WP_API_URL || 'https://dija.com.br/wp-json/wp/v2/'
+    }
   },
 
   css: ['~/assets/css/main.css'],
@@ -29,5 +27,9 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+
+  typescript: {
+    typeCheck: false
   }
 })

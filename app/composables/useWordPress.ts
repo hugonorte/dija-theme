@@ -25,7 +25,13 @@ interface WordPressPage {
   }
 }
 
-export const useWordPress = (config?: any) => {
+interface WordPressRuntimeConfig {
+  public: {
+    wpApiUrl: string
+  }
+}
+
+export const useWordPress = (config?: WordPressRuntimeConfig) => {
   // Se não for passada configuração (ex: em produção), usa o useRuntimeConfig() do Nuxt
   const runtimeConfig = config || useRuntimeConfig()
   const wpApiUrl = runtimeConfig.public.wpApiUrl
@@ -50,7 +56,7 @@ export const useWordPress = (config?: any) => {
     try {
       // A API retorna um array, pegamos o primeiro item
       const posts = await $fetch<WordPressPost[]>(`${wpApiUrl}posts?slug=${slug}`)
-      return posts.length > 0 ? posts[0] : null
+      return posts[0] || null
     } catch (error) {
       console.error(`Erro ao buscar post com slug ${slug}:`, error)
       throw error
@@ -63,7 +69,7 @@ export const useWordPress = (config?: any) => {
   const getPageBySlug = async (slug: string): Promise<WordPressPage | null> => {
     try {
       const pages = await $fetch<WordPressPage[]>(`${wpApiUrl}pages?slug=${slug}`)
-      return pages.length > 0 ? pages[0] : null
+      return pages[0] || null
     } catch (error) {
       console.error(`Erro ao buscar página com slug ${slug}:`, error)
       throw error

@@ -12,7 +12,7 @@ describe('useWordPress Composable', () => {
         wpApiUrl: 'https://dija.com.br/wp-json/wp/v2/'
       }
     }
-    
+
     // Configura o mock do $fetch
     vi.mocked($fetch).mockResolvedValue(mockPosts)
 

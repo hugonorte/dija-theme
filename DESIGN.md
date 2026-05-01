@@ -1,86 +1,57 @@
-# DESIGN.md
+# Guia de Design: Blog DIJA
 
-## Resumo Executivo
-- Esse projeto é um frontend do blog DIJA "https://dija.com.br/" que trará informações sobre a professora de dança de salão Dijaina Ferreira. Úteis para amantes da dança de salão
-
-## 🌟 Atmosfera e Princípios de Design
-
-O **Dija** deve transmitir uma sensação de **"Dança Premium"**. Isso significa uma combinação de elegância e precisão de um dançarino.
-- **Confiança e Elegância**: Interface limpa e dados bem estruturados.
-- **Modernidade**: Uso de glassmorphism, sombras suaves e animações fluidas.
-- **Limpeza de Código**: Separação clara entre estrutura (HTML) e estilo (SCSS), evitando a poluição do template com classes utilitárias excessivas.
+## 1. Atmosfera e Princípios
+O **Blog DIJA** deve transmitir a elegância, o movimento e a precisão da dança de salão. A interface deve ser "Premium", moderna e fluida.
+- **Elegância**: Espaçamento generoso e tipografia sofisticada.
+- **Fluidez**: Micro-animações e transições suaves entre páginas.
+- **Limpeza**: Código HTML semântico, com estilo centralizado em SCSS.
 
 ---
 
-## 🎨 Paleta de Cores
+## 2. Identidade Visual
 
-### Cores Primárias (Rosa/Roxo)
-Utilizamos uma escala de rosa/roxo que remete ao tema de dança:
-- **Primary-500**: `#ff389d` (Base)
-- **Primary-600**: `#e61e8a` (Destaque principal)
-- **Primary-700**: `#cc1a7a` (Hover e estados ativos)
+### 2.1. Paleta de Cores (Dance Vibrance)
+- **Primary (Rosa/Roxo)**: 
+  - `Base`: `#ff389d`
+  - `Deep`: `#e61e8a`
+  - `Dark`: `#cc1a7a`
+- **Neutras**:
+  - `Background`: `#ffffff`
+  - `Text Primary`: `#333333` (Cinza antracite para leitura)
+  - `Text Muted`: `#666666`
+- **Especiais**:
+  - `Glass`: `rgba(255, 255, 255, 0.8)` com `backdrop-filter: blur(12px)`.
 
-### Cores Neutras e Superfície
-- **Background**: `#ffffff` (White)
-- **Surface**: `rgba(255, 255, 255, 0.8)` (Branco translúcido com blur)
-- **Text Primary**: `#333333` (Cinza Escuro - Leitura confortável)
-- **Text Secondary**: `#666666` (Cinza Médio - Legendas e hints)
-
----
-
-## Typography ✍️
-
-- **Principal**: [Montserrat](https://fonts.google.com/specimen/Montserrat)
-- **Cabeçalhos**: Montserrat (Black/Bold para impacto tecnológico)
-- **Hierarquia**:
-  - `H1`: 3rem (48px), Black, Tracking Tight.
-  - `Body`: 1rem (16px), Regular.
-  - `Label`: 0.875rem (14px), Medium.
+### 2.2. Tipografia
+- **Família Principal**: [Montserrat](https://fonts.google.com/specimen/Montserrat).
+- **H1/Títulos**: Montserrat Bold/Black com `tracking-tight`.
+- **Corpo**: Montserrat Regular para legibilidade.
 
 ---
 
-## 📐 Espaçamento e Layout
+## 3. Layout e Componentes
 
-### Sistema de Layout (Flexbox)
-- Layout responsivo baseado no modelo Flexbox do CSS / Nuxt UI.
-- Desktop: Alinhamento Flex com Sidebar de navegação (largura fixa ou 25%) e Área de conteúdo (flex-grow ou 75%).
-- Mobile: Coluna única com Stepper horizontal no topo.
+### 3.1. Sistema de Layout
+- **Flexbox Obrigatório**: Todo o alinhamento do projeto deve usar Flexbox. O uso de CSS Grid é proibido por diretriz de projeto.
+- **Responsividade**: Mobile-first. Layout de coluna única em smartphones e grade flexível em desktops.
 
-### Bordas e Sombras
-- **Border Radius**: `20px` para cards principais (Premium look).
-- **Shadows**: `0 10px 15px -3px rgba(0, 0, 0, 0.1)` (Profundidade suave).
-
----
-
-## 🧩 Componentes Customizados
-
-### Premium Card
-- **Estilo**: Glassmorphism (`backdrop-filter: blur(12px)`).
-- **Interação**: Elevação suave no hover (`translateY(-4px)`).
-- **Uso**: Container principal de cada passo do Wizard.
-
+### 3.2. Elementos "Premium"
+- **Bordas**: `border-radius: 20px` para elementos de destaque.
+- **Sombras**: Sombras suaves (`0 10px 15px -3px rgba(0, 0, 0, 0.1)`) para profundidade.
+- **Cards**: Efeito Glassmorphism em seções de destaque.
 
 ---
 
-##  Metodologia de Estilização
-
-### SCSS (Prioridade Total)
-- A estilização deve ser feita via arquivos SCSS (ou blocos `<style lang="scss">` scoped nos componentes). 
-- Manter o HTML semântico e legível.
-- Facilitar a reutilização de variáveis e mixins.
-
-### Tailwind CSS (Exceções)
-O uso de Tailwind é restrito a:
-- Ajustes pontuais e excepcionais.
-- Customização de propriedades internas de componentes do **Nuxt UI** através do atributo `ui`.
-- Prototipagem rápida que será posteriormente refatorada para SCSS.
+## 4. Metodologia de Estilização (Diretriz Técnica)
+- **Prioridade SCSS**: 90% do estilo deve estar em blocos SCSS ou arquivos externos.
+- **Tailwind CSS**: Uso restrito a propriedades do Nuxt UI (atributo `ui`) ou ajustes pontuais de margem/padding quando o SCSS for desnecessariamente complexo.
+- **Nomenclatura**: Variáveis e classes em Inglês; Textos de interface em Português-BR.
 
 ---
 
-## 🛠️ Regras para IA (Stitch Context)
-Ao gerar novas telas ou componentes:
-1. Sempre utilize componentes do **Nuxt UI** como base.
-2. **Priorize SCSS** para qualquer customização visual.
-3. Utilize Tailwind apenas para props de componentes UI ou em casos de extrema simplicidade.
-4. Aplique a classe `.premium-card` para containers de dados.
-5. Mantenha os textos em **Português Brasileiro** e o código em **Inglês**.
+## 5. Regras para Agentes IA
+Ao criar novos componentes:
+1. Use componentes do **Nuxt UI v4** como base.
+2. Aplique **Flexbox** para todo e qualquer alinhamento.
+3. Não utilize classes utilitárias excessivas no HTML; use SCSS.
+4. Garanta que o estado de carregamento (Skeleton/Loader) seja elegante.
