@@ -20,22 +20,15 @@ Este projeto segue um modelo de ramificação específico:
 
 O pipeline utiliza a lógica de eventos do GitHub Actions para distinguir entre pushes e merges.
 
-### Gatilhos (Triggers)
-```yaml
-on:
-  push:
-    branches: [ master, dev ]
-  pull_request:
-    branches: [ master ]
-    types: [ closed ]
-```
-
 ### Job 1: Build
 Este job roda em cada push ou pull request para validar que o código está íntegro.
-1. **Instalação**: Executa `pnpm install`.
-2. **Lint**: Verifica padrões de código.
-3. **Build**: Executa `pnpm run generate` (SSG).
-4. **Upload Artifact**: Salva a pasta `.output/public`.
+1. **Checkout**: Obtém o código fonte.
+2. **Setup pnpm**: Instala o gerenciador de pacotes pnpm (v9).
+3. **Setup Node.js**: Configura o ambiente Node (v20+).
+4. **Instalação**: Executa `pnpm install`.
+5. **Lint**: Verifica padrões de código.
+6. **Build**: Executa `pnpm run generate` (SSG).
+7. **Upload Artifact**: Salva a pasta `.output/public`.
 
 ### Job 2: Deploy
 Este job possui uma condicional rigorosa para execução:
@@ -50,7 +43,17 @@ Para que o deploy funcione, as seguintes secrets devem estar configuradas no Git
 - `HOSTINGER_SERVER_IP`: IP do servidor.
 - `HOSTINGER_SSH_PORT`: Porta SSH (Hostinger: 65002).
 - `HOSTINGER_USERNAME`: Usuário SSH.
-- `HOSTINGER_REMOTE_PATH`: Caminho no servidor (deve ser: `public_html/wp-content/themes/dija-theme/`).
+- `HOSTINGER_REMOTE_PATH`: `public_html/wp-content/themes/dija-theme/`
+
+## Troubleshooting (Solução de Problemas)
+
+### Erro: `packages field missing or empty` no pnpm
+Se o build falhar com este erro durante o `pnpm install`, certifique-se de que o arquivo **`pnpm-workspace.yaml`** na raiz contém a definição do escopo:
+```yaml
+packages:
+  - '.'
+```
+Isso é obrigatório quando o arquivo existe, mesmo para projetos de um único pacote, para que o pnpm saiba onde buscar as dependências.
 
 ## Como Acionar Manualmente
 O deploy também pode ser disparado manualmente através da aba **Actions** no GitHub, selecionando o workflow e clicando em "Run workflow", independente do fluxo de PR.
