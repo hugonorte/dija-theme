@@ -1,0 +1,72 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master ]
+    types: [ closed ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run generate
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: .output/public
+
+  deploy:
+    name: Deploy to dija.com.br (WordPress Theme Folder)
+    needs: build
+    # Executa apenas se for um merge de PR da 'dev' para 'master' OU disparo manual
+    if: >
+      (github.event_name == 'pull_request' && 
+       github.event.pull_request.merged == true && 
+       github.event.pull_request.head.ref == 'dev' && 
+       github.event.pull_request.base.ref == 'master') ||
+      (github.event_name == 'workflow_dispatch')
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./dist
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          known_hosts: unnecessary
+          if_key_exists: replace
+
+      - name: Deploy with rsync
+        # O HOSTINGER_REMOTE_PATH deve ser configurado no GitHub como: public_html/wp-content/themes/dija-theme/
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}
