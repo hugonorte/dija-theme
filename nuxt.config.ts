@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui'
   ],
+  app: {
+    buildAssetsDir: '/wp-content/themes/dija-theme/_nuxt/'
+  },
 
   runtimeConfig: {
     public: {
