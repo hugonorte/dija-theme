@@ -6,7 +6,9 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
   app: {
-    buildAssetsDir: '/wp-content/themes/dija-theme/_nuxt/'
+    baseURL: '/',
+    buildAssetsDir: '_nuxt/',
+    cdnURL: '/wp-content/themes/dija-theme/'
   },
 
   runtimeConfig: {
