@@ -15,6 +15,11 @@ export default defineNuxtConfig({
     }
   },
   app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/wp-content/themes/dija-theme/favicon.ico' }
+      ]
+    },
     baseURL: '/',
     buildAssetsDir: '_nuxt/',
     cdnURL: '/wp-content/themes/dija-theme/'
