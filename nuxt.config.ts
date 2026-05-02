@@ -6,7 +6,13 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
   experimental: {
-    payloadExtraction: false
+    payloadExtraction: false,
+    appManifest: false
+  },
+  nitro: {
+    prerender: {
+      crawlLinks: false
+    }
   },
   app: {
     baseURL: '/',
