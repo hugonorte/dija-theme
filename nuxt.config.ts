@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui'
   ],
+  experimental: {
+    payloadExtraction: false
+  },
   app: {
     baseURL: '/',
     buildAssetsDir: '_nuxt/',
