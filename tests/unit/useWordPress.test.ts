@@ -1,5 +1,8 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { describe, it, expect, vi } from 'vitest'
-import { useWordPress } from '../../composables/useWordPress'
+import { useWordPress } from '../../app/composables/useWordPress'
 
 // Mock do $fetch global
 vi.stubGlobal('$fetch', vi.fn())

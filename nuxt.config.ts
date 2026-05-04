@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     },
     baseURL: '/',
     buildAssetsDir: '_nuxt/',
-    cdnURL: '/wp-content/themes/dija-theme/'
+    cdnURL: process.env.NODE_ENV === 'production' && !process.env.CYPRESS ? '/wp-content/themes/dija-theme/' : '/'
   },
 
   runtimeConfig: {

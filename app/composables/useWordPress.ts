@@ -25,6 +25,12 @@ interface WordPressPage {
   }
 }
 
+interface ContactSubmission {
+  name: string
+  email: string
+  message: string
+}
+
 interface WordPressRuntimeConfig {
   public: {
     wpApiUrl: string
@@ -76,9 +82,27 @@ export const useWordPress = (config?: WordPressRuntimeConfig) => {
     }
   }
 
+  /**
+   * Envia uma mensagem de contato para o WordPress
+   */
+  const submitContactForm = async (data: ContactSubmission): Promise<{ message: string }> => {
+    try {
+      // Removemos 'wp/v2/' da URL base para acessar o namespace customizado 'dija/v1'
+      const customApiUrl = wpApiUrl.replace('wp/v2/', 'dija/v1/')
+      return await $fetch<{ message: string }>(`${customApiUrl}contact`, {
+        method: 'POST',
+        body: data
+      })
+    } catch (error) {
+      console.error('Erro ao enviar formulário de contato:', error)
+      throw error
+    }
+  }
+
   return {
     getPosts,
     getPostBySlug,
-    getPageBySlug
+    getPageBySlug,
+    submitContactForm
   }
 }

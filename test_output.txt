@@ -1,0 +1,149 @@
+
+> dija@ test /mnt/sda2/sandbox/wordpress/dija
+> vitest tests/unit/pages/contato.test.ts --run
+
+
+ RUN  v4.1.5 /mnt/sda2/sandbox/wordpress/dija
+
+stdout | tests/unit/pages/contato.test.ts
+<Suspense> is an experimental feature and its API will likely change.
+
+stderr | tests/unit/pages/contato.test.ts > Página de Contato > deve validar o formato do email
+[Vue warn]: Failed to resolve component: Card
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <MountSuspendedComponent > 
+  at <MountSuspendedHelper> 
+  at <Anonymous ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Failed to resolve component: PageCard
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <MountSuspendedComponent > 
+  at <MountSuspendedHelper> 
+  at <Anonymous ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Failed to resolve component: Card
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <MountSuspendedComponent > 
+  at <MountSuspendedHelper> 
+  at <Anonymous ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+[Vue warn]: Failed to resolve component: PageCard
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement. 
+  at <MountSuspendedComponent > 
+  at <MountSuspendedHelper> 
+  at <Anonymous ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+stderr | tests/unit/pages/contato.test.ts > Página de Contato > deve validar o formato do email
+[Vue warn]: Unhandled error during execution of native event handler 
+  at <UForm schema= {
+  __type: 'VVTypedSchema',
+  parse: [AsyncFunction: parse],
+  cast: [Function: cast],
+  describe: [Function: describe]
+} state= { name: '', email: 'email-invalido', message: '' } onSubmit=fn<submissionHandler>  ... > 
+  at <Primitive as=undefined class="w-full max-w-(--ui-container) mx-auto px-4 sm:px-6 lg:px-8 contact-page" > 
+  at <UContainer class="contact-page" > 
+  at <MountSuspendedComponent > 
+  at <MountSuspendedHelper> 
+  at <Anonymous ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+ ❯ tests/unit/pages/contato.test.ts (2 tests | 1 failed) 12104ms
+     × deve renderizar os campos do formulário 5646ms
+     ✓ deve validar o formato do email  2397ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/pages/contato.test.ts > Página de Contato > deve renderizar os campos do formulário
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/pages/contato.test.ts:19:3
+     17|
+     18| describe('Página de Contato', () => {
+     19|   it('deve renderizar os campos do formulário', async () => {
+       |   ^
+     20|     const wrapper = await mountSuspended(Contato)
+     21|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 3 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Form validation failed: Unsupported form schema
+ ❯ validateSchema node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/utils/form.js:46:11
+     44|     return validateSuperstructSchema(state, schema);
+     45|   } else {
+     46|     throw new Error("Form validation failed: Unsupported form schema");
+       |           ^
+     47|   }
+     48| }
+ ❯ getErrors node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:107:61
+ ❯ _validate node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:128:31
+ ❯ node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:74:15
+ ❯ node_modules/.pnpm/@vueuse+core@14.2.1_vue@3.5.33_typescript@6.0.3_/node_modules/@vueuse/core/dist/index.js:3438:100
+ ❯ Object.emit node_modules/.pnpm/@vueuse+core@14.2.1_vue@3.5.33_typescript@6.0.3_/node_modules/@vueuse/core/dist/index.js:3438:85
+ ❯ emitFormEvent node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/composables/useFormField.js:26:15
+ ❯ emitFormChange node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/composables/useFormField.js:36:5
+ ❯ onChange node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Input.vue:100:3
+
+This error originated in "tests/unit/pages/contato.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deve validar o formato do email". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Form validation failed: Unsupported form schema
+ ❯ validateSchema node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/utils/form.js:46:11
+     44|     return validateSuperstructSchema(state, schema);
+     45|   } else {
+     46|     throw new Error("Form validation failed: Unsupported form schema");
+       |           ^
+     47|   }
+     48| }
+ ❯ getErrors node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:107:61
+ ❯ _validate node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:128:31
+ ❯ node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:74:15
+ ❯ node_modules/.pnpm/@vueuse+core@14.2.1_vue@3.5.33_typescript@6.0.3_/node_modules/@vueuse/core/dist/index.js:3438:100
+ ❯ Object.emit node_modules/.pnpm/@vueuse+core@14.2.1_vue@3.5.33_typescript@6.0.3_/node_modules/@vueuse/core/dist/index.js:3438:85
+ ❯ emitFormEvent node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/composables/useFormField.js:26:15
+ ❯ emitFormChange node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/composables/useFormField.js:36:5
+ ❯ onChange node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Input.vue:100:3
+
+This error originated in "tests/unit/pages/contato.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deve validar o formato do email". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Form validation failed: Unsupported form schema
+ ❯ validateSchema node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/utils/form.js:46:11
+     44|     return validateSuperstructSchema(state, schema);
+     45|   } else {
+     46|     throw new Error("Form validation failed: Unsupported form schema");
+       |           ^
+     47|   }
+     48| }
+ ❯ getErrors node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:107:61
+ ❯ _validate node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:128:31
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+ ❯ onSubmitWrapper node_modules/.pnpm/@nuxt+ui@4.7.0_@internationalized+date@3.12.1_@internationalized+number@3.6.6_@tiptap+e_404ab7c53caf97a59a5a6283493d6d5d/node_modules/@nuxt/ui/dist/runtime/components/Form.vue:157:18
+
+This error originated in "tests/unit/pages/contato.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deve validar o formato do email". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+     Errors  3 errors
+   Start at  13:06:17
+   Duration  31.60s (transform 19.09s, setup 568ms, import 15.86s, tests 12.10s, environment 2.25s)
+
+ ELIFECYCLE  Test failed. See above for more details.

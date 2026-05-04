@@ -24,6 +24,15 @@ Este comando executa sequencialmente:
 - **E2E**: Cypress para fluxos de navegação e integração com a API do WP.
 - **Regra**: O teste deve ser concebido junto ou antes da funcionalidade.
 
+### 2.3. Padrões de Estabilidade E2E (Aprendizados de Campo)
+Para garantir que os testes do Cypress passem de forma consistente no ambiente Nuxt, as seguintes regras devem ser seguidas em formulários e elementos interativos:
+
+1.  **Isolamento de Hidratação (`<ClientOnly>`)**: No Nuxt 4, o processo de hidratação pode "resetar" o DOM e destruir listeners de evento enquanto o Cypress já está interagindo. **Sempre envolva formulários críticos em `<ClientOnly>`** para garantir que a interação ocorra apenas no DOM estável do lado do cliente.
+2.  **Visibilidade Determinística (`v-show` vs `v-if`)**: Para elementos que o Cypress precisa validar a presença (como mensagens de erro), prefira `v-show`. Isso mantém o elemento no DOM o tempo todo, evitando erros de "elemento não encontrado" durante transições rápidas de estado.
+3.  **Seletores Padrão (`name` e `id`)**: Nunca remova os atributos `name` e `id` dos inputs. Testes E2E frequentemente dependem de seletores como `input[name="xxx"]` para localizar campos de forma robusta.
+4.  **Botões e Submissão**: Utilize `<button type="submit">` dentro de um `<form @submit.prevent="...">`. Esta é a forma mais estável para o Cypress disparar eventos de submissão e interceptar requisições XHR/Fetch.
+5.  **Reatividade Síncrona**: No handler de submissão, as atualizações de estado da UI (como exibir erros de validação) devem ocorrer de forma síncrona antes de chamadas assíncronas (await). Isso garante que o Cypress detecte as mudanças na interface sem timeouts.
+
 ---
 
 ## 3. Padrões de Desenvolvimento (@engineer)

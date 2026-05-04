@@ -1,0 +1,79 @@
+
+> dija@ test:e2e /mnt/sda2/sandbox/wordpress/dija
+> cypress run
+
+Warning: The allowCypressEnv configuration option is enabled. This allows any browser code to read values from Cypress.env(). This is insecure and will be removed in a future major version.
+
+1. Replace Cypress.env() calls with cy.env() (for sensitive values) or Cypress.expose() (for public configuration)
+2. Set allowCypressEnv: false in your Cypress configuration to disable Cypress.env()
+
+Learn more: https://on.cypress.io/cypress-env-migration
+
+
+================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.14.2                                                                        │
+  │ Browser:        Electron 138 (headless)                                                        │
+  │ Node Version:   v24.12.0 (/home/hugo/.nvm/versions/node/v24.12.0/bin/node)                     │
+  │ Specs:          1 found (contato.cy.ts)                                                        │
+  │ Searched:       tests/e2e/**/*.cy.{js,jsx,ts,tsx}                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  contato.cy.ts                                                                   (1 of 1)
+
+
+  Página de Contato E2E
+    ✓ deve exibir o formulário corretamente (2435ms)
+    1) deve validar campos obrigatórios
+
+
+  1 passing (16s)
+  1 failing
+
+  1) Página de Contato E2E
+       deve validar campos obrigatórios:
+     AssertionError: Timed out retrying after 10000ms: Expected to find content: 'Nome é obrigatório' but never did.
+      at Context.eval (webpack://dija/./tests/e2e/contato.cy.ts:22:58)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        2                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     16 seconds                                                                       │
+  │ Spec Ran:     contato.cy.ts                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /mnt/sda2/sandbox/wordpress/dija/cypress/screenshots/contato.cy.ts/Página de Con     (1280x720)
+     tato E2E -- deve validar campos obrigatórios (failed).png                                      
+
+
+================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  contato.cy.ts                            00:16        2        1        1        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 1 failed (100%)                     00:16        2        1        1        -        -  
+
+ ELIFECYCLE  Command failed with exit code 1.
