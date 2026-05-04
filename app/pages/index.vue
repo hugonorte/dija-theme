@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'homepage',
+  layout: 'homepage'
 })
 // Buscamos nosso service de WordPress
 const { getPosts } = useWordPress()

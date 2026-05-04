@@ -33,9 +33,9 @@ const [email] = defineField('email')
 const [message] = defineField('message')
 
 // Sincronização
-watch(nameValue, (v) => name.value = v)
-watch(emailValue, (v) => email.value = v)
-watch(messageValue, (v) => message.value = v)
+watch(nameValue, v => name.value = v)
+watch(emailValue, v => email.value = v)
+watch(messageValue, v => message.value = v)
 
 const loading = ref(false)
 
@@ -60,19 +60,19 @@ const onFormSubmit = async () => {
       email: emailValue.value,
       message: messageValue.value
     })
-    
+
     toast.add({
       title: 'Sucesso!',
       description: 'Mensagem enviada.',
       color: 'success'
     })
-    
+
     nameValue.value = ''
     emailValue.value = ''
     messageValue.value = ''
     showErrors.value = { name: false, email: false, message: false }
     resetForm()
-  } catch (error) {
+  } catch {
     toast.add({ title: 'Erro', description: 'Falha ao enviar.', color: 'danger' })
   } finally {
     loading.value = false
@@ -88,59 +88,82 @@ const onFormSubmit = async () => {
     />
 
     <div class="contact-layout">
-      <!-- 
-        O uso do ClientOnly é CRÍTICO aqui. 
-        Ele impede que o Nuxt realize a hidratação (SSR -> Client) neste bloco, 
-        evitando que o Cypress perca a referência dos elementos ou dos listeners 
+      <!--
+        O uso do ClientOnly é CRÍTICO aqui.
+        Ele impede que o Nuxt realize a hidratação (SSR -> Client) neste bloco,
+        evitando que o Cypress perca a referência dos elementos ou dos listeners
         de evento durante o processo de reconstrução do DOM pelo Vue.
       -->
       <ClientOnly>
         <div class="form-card">
-          <h2 class="form-title">Envie sua Mensagem</h2>
-          
-          <form @submit.prevent="onFormSubmit" class="clean-form">
+          <h2 class="form-title">
+            Envie sua Mensagem
+          </h2>
+
+          <form
+            class="clean-form"
+            @submit.prevent="onFormSubmit"
+          >
             <div class="form-group">
-              <label for="contact-name" class="label">Seu Nome</label>
-              <input 
-                v-model="nameValue" 
+              <label
+                for="contact-name"
+                class="label"
+              >Seu Nome</label>
+              <input
+                id="contact-name"
+                v-model="nameValue"
                 type="text"
                 name="name"
-                id="contact-name"
-                placeholder="Nome completo" 
+                placeholder="Nome completo"
                 class="input-field"
-              />
+              >
               <!-- v-show garante que o elemento esteja SEMPRE no DOM para o Cypress -->
-              <span v-show="showErrors.name" class="error-text">Nome é obrigatório</span>
+              <span
+                v-show="showErrors.name"
+                class="error-text"
+              >Nome é obrigatório</span>
             </div>
 
             <div class="form-group">
-              <label for="contact-email" class="label">Seu Email</label>
-              <input 
-                v-model="emailValue" 
+              <label
+                for="contact-email"
+                class="label"
+              >Seu Email</label>
+              <input
+                id="contact-email"
+                v-model="emailValue"
                 type="email"
                 name="email"
-                id="contact-email"
-                placeholder="email@exemplo.com" 
+                placeholder="email@exemplo.com"
                 class="input-field"
-              />
-              <span v-show="showErrors.email" class="error-text">Email inválido</span>
+              >
+              <span
+                v-show="showErrors.email"
+                class="error-text"
+              >Email inválido</span>
             </div>
 
             <div class="form-group">
-              <label for="contact-message" class="label">Mensagem</label>
-              <textarea 
-                v-model="messageValue" 
-                name="message"
+              <label
+                for="contact-message"
+                class="label"
+              >Mensagem</label>
+              <textarea
                 id="contact-message"
-                placeholder="Sua mensagem..." 
+                v-model="messageValue"
+                name="message"
+                placeholder="Sua mensagem..."
                 rows="5"
                 class="input-field textarea-field"
-              ></textarea>
-              <span v-show="showErrors.message" class="error-text">Mensagem é obrigatória</span>
+              />
+              <span
+                v-show="showErrors.message"
+                class="error-text"
+              >Mensagem é obrigatória</span>
             </div>
 
             <div class="actions">
-              <button 
+              <button
                 type="submit"
                 class="submit-button"
                 :disabled="loading"
@@ -153,9 +176,9 @@ const onFormSubmit = async () => {
       </ClientOnly>
 
       <div class="info-sidebar">
-         <UPageCard title="Contato Direto">
-            <p>São Paulo, SP</p>
-         </UPageCard>
+        <UPageCard title="Contato Direto">
+          <p>São Paulo, SP</p>
+        </UPageCard>
       </div>
     </div>
   </UContainer>
