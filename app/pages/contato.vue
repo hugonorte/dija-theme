@@ -73,7 +73,7 @@ const onFormSubmit = async () => {
     showErrors.value = { name: false, email: false, message: false }
     resetForm()
   } catch {
-    toast.add({ title: 'Erro', description: 'Falha ao enviar.', color: 'danger' })
+    toast.add({ title: 'Erro', description: 'Falha ao enviar.', color: 'error' })
   } finally {
     loading.value = false
   }
