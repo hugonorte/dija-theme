@@ -13,6 +13,8 @@ const toast = useToast()
  */
 const nameValue = ref('')
 const emailValue = ref('')
+const whatsappValue = ref('')
+const faxValue = ref('') // Honeypot
 const messageValue = ref('')
 
 /**
@@ -21,6 +23,7 @@ const messageValue = ref('')
 const showErrors = ref({
   name: false,
   email: false,
+  whatsapp: false,
   message: false
 })
 
@@ -30,7 +33,22 @@ const showErrors = ref({
 const { defineField, resetForm } = useForm()
 const [name] = defineField('name')
 const [email] = defineField('email')
+const [whatsapp] = defineField('whatsapp')
 const [message] = defineField('message')
+
+// Sincronização e Máscara de WhatsApp
+watch(whatsappValue, (v) => {
+  let val = v.replace(/\D/g, '') // Remove tudo que não é dígito
+  if (val.length > 11) val = val.slice(0, 11) // Limita a 11 dígitos
+
+  let masked = val
+  if (val.length > 0) masked = '(' + val
+  if (val.length > 2) masked = '(' + val.slice(0, 2) + ') ' + val.slice(2)
+  if (val.length > 7) masked = '(' + val.slice(0, 2) + ') ' + val.slice(2, 7) + '-' + val.slice(7)
+
+  whatsappValue.value = masked
+  whatsapp.value = masked
+})
 
 // Sincronização
 watch(nameValue, v => name.value = v)
@@ -47,9 +65,10 @@ const onFormSubmit = async () => {
   // Validação síncrona para o Cypress detectar a mudança de UI imediatamente
   showErrors.value.name = !nameValue.value.trim()
   showErrors.value.email = !emailValue.value.trim() || !/.+@.+\..+/.test(emailValue.value)
+  showErrors.value.whatsapp = whatsappValue.value.replace(/\D/g, '').length < 11
   showErrors.value.message = !messageValue.value.trim()
 
-  if (showErrors.value.name || showErrors.value.email || showErrors.value.message) {
+  if (showErrors.value.name || showErrors.value.email || showErrors.value.whatsapp || showErrors.value.message) {
     return
   }
 
@@ -58,7 +77,9 @@ const onFormSubmit = async () => {
     await submitContactForm({
       name: nameValue.value,
       email: emailValue.value,
-      message: messageValue.value
+      whatsapp: whatsappValue.value,
+      message: messageValue.value,
+      fax_number: faxValue.value // Envia o valor (deve estar vazio)
     })
 
     toast.add({
@@ -69,8 +90,9 @@ const onFormSubmit = async () => {
 
     nameValue.value = ''
     emailValue.value = ''
+    whatsappValue.value = ''
     messageValue.value = ''
-    showErrors.value = { name: false, email: false, message: false }
+    showErrors.value = { name: false, email: false, whatsapp: false, message: false }
     resetForm()
   } catch {
     toast.add({ title: 'Erro', description: 'Falha ao enviar.', color: 'error' })
@@ -142,6 +164,25 @@ const onFormSubmit = async () => {
                 class="error-text"
               >Email inválido</span>
             </div>
+            
+            <div class="form-group">
+              <label
+                for="contact-whatsapp"
+                class="label"
+              >Seu WhatsApp</label>
+              <input
+                id="contact-whatsapp"
+                v-model="whatsappValue"
+                type="text"
+                name="whatsapp"
+                placeholder="(99) 99999-9999"
+                class="input-field"
+              >
+              <span
+                v-show="showErrors.whatsapp"
+                class="error-text"
+              >Número de WhatsApp incompleto</span>
+            </div>
 
             <div class="form-group">
               <label
@@ -160,6 +201,11 @@ const onFormSubmit = async () => {
                 v-show="showErrors.message"
                 class="error-text"
               >Mensagem é obrigatória</span>
+            </div>
+
+            <div class="hp-container" aria-hidden="true">
+              <label for="fax_number">Fax Number</label>
+              <input id="fax_number" v-model="faxValue" type="text" name="fax_number" autocomplete="off" tabindex="-1">
             </div>
 
             <div class="actions">
@@ -268,4 +314,13 @@ const onFormSubmit = async () => {
 }
 
 .info-sidebar { flex: 1; }
+.hp-container {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
 </style>

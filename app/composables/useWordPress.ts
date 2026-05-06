@@ -28,7 +28,9 @@ interface WordPressPage {
 interface ContactSubmission {
   name: string
   email: string
+  whatsapp: string
   message: string
+  fax_number?: string // Campo Honeypot
 }
 
 interface WordPressRuntimeConfig {
