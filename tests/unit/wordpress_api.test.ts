@@ -3,10 +3,16 @@ import { useWordPress } from '../../app/composables/useWordPress'
 
 /**
  * ESPECIFICAÇÃO TDD - Integração API de Contato
- * 
- * Este arquivo define o comportamento esperado da comunicação entre o Frontend Nuxt 
+ *
+ * Este arquivo define o comportamento esperado da comunicação entre o Frontend Nuxt
  * e o Backend WordPress para o formulário de contato.
  */
+
+interface WordPressRuntimeConfigMock {
+  public: {
+    wpApiUrl: string
+  }
+}
 
 describe('TDD: Comunicação HTTP - Form de Contato', () => {
   // Configuração simulando o ambiente de desenvolvimento (Docker)
@@ -16,7 +22,7 @@ describe('TDD: Comunicação HTTP - Form de Contato', () => {
     }
   }
 
-  const { submitContactForm } = useWordPress(devConfig as any)
+  const { submitContactForm } = useWordPress(devConfig as unknown as WordPressRuntimeConfigMock)
 
   // --- CENÁRIO 1: CAMINHO FELIZ ---
   it('Deve processar com sucesso uma mensagem válida (Caminho Feliz)', async () => {
@@ -57,6 +63,6 @@ describe('TDD: Comunicação HTTP - Form de Contato', () => {
       message: ''
     }
 
-    await expect(submitContactForm(incompleteData as any)).rejects.toThrow()
+    await expect(submitContactForm(incompleteData as unknown as Parameters<typeof submitContactForm>[0])).rejects.toThrow()
   })
 })

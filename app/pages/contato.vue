@@ -164,7 +164,7 @@ const onFormSubmit = async () => {
                 class="error-text"
               >Email inválido</span>
             </div>
-            
+
             <div class="form-group">
               <label
                 for="contact-whatsapp"
@@ -203,9 +203,19 @@ const onFormSubmit = async () => {
               >Mensagem é obrigatória</span>
             </div>
 
-            <div class="hp-container" aria-hidden="true">
+            <div
+              class="hp-container"
+              aria-hidden="true"
+            >
               <label for="fax_number">Fax Number</label>
-              <input id="fax_number" v-model="faxValue" type="text" name="fax_number" autocomplete="off" tabindex="-1">
+              <input
+                id="fax_number"
+                v-model="faxValue"
+                type="text"
+                name="fax_number"
+                autocomplete="off"
+                tabindex="-1"
+              >
             </div>
 
             <div class="actions">
