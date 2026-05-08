@@ -11,7 +11,8 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      crawlLinks: false
+      crawlLinks: true,
+      routes: ['/contato']
     }
   },
   app: {
@@ -34,7 +35,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    '/contato': { prerender: true }
   },
 
   compatibilityDate: '2025-01-15',
