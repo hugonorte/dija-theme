@@ -57,9 +57,15 @@ jobs:
           known_hosts: unnecessary
           if_key_exists: replace
 
-      - name: Deploy with rsync
-        # O HOSTINGER_REMOTE_PATH deve ser configurado no GitHub como: public_html/wp-content/themes/dija-theme/
+      - name: Deploy to dija.com.br
+        # O HOSTINGER_REMOTE_PATH deve ser a raiz: public_html/
         run: |
-          rsync -avz --delete \
+          # 1. Enviar arquivos estáticos para a raiz (excluindo WordPress e a pasta _nuxt)
+          rsync -avz --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
             ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}
+
+          # 2. Enviar especificamente a pasta _nuxt para dentro do tema
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./dist/_nuxt/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}wp-content/themes/dija-theme/_nuxt/
