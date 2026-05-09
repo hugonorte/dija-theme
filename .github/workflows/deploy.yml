@@ -61,12 +61,13 @@ jobs:
         # Certifique-se que o HOSTINGER_REMOTE_PATH é public_html/
         run: |
           # 1. Upload para a RAIZ (SSG e SEO)
-          rsync -avz --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
+          # Usamos -avzc (c de checksum) para garantir que arquivos modificados sejam detectados
+          rsync -avzc --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
             ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/
 
           # 2. Upload para o TEMA (Ponte WordPress e Assets)
-          rsync -avz --delete \
+          # Enviamos a pasta dist/ completa para dentro do tema, o que já inclui o index.html, assets e php.
+          rsync -avzc \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/index.html ./dist/functions.php ./dist/style.css ./dist/index.php ./dist/hero.png ./dist/favicon.ico ./dist/_nuxt/ \
-            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/wp-content/themes/dija-theme/
+            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/wp-content/themes/dija-theme/
