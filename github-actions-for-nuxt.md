@@ -43,7 +43,9 @@ Para que o deploy funcione, as seguintes secrets devem estar configuradas no Git
 - `HOSTINGER_SERVER_IP`: IP do servidor.
 - `HOSTINGER_SSH_PORT`: Porta SSH (Hostinger: 65002).
 - `HOSTINGER_USERNAME`: Usuário SSH.
-- `HOSTINGER_REMOTE_PATH`: `public_html/wp-content/themes/dija-theme/`
+- `HOSTINGER_REMOTE_PATH`: `public_html`
+
+O workflow monta automaticamente o diretório do tema em `public_html/wp-content/themes/dija-theme/`.
 
 ## Troubleshooting (Solução de Problemas)
 

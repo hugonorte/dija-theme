@@ -61,17 +61,23 @@ jobs:
         run: |
           # Definimos a base para evitar erros de barra dupla //
           # Se o secret for 'public_html/' ele vira 'public_html'
-          BASE_PATH=$(echo "${{ secrets.HOSTINGER_REMOTE_PATH }}" | sed 's/\/$//')
+          REMOTE_ROOT=$(echo "${{ secrets.HOSTINGER_REMOTE_PATH }}" | sed 's/\/$//')
+          REMOTE_THEME_DIR="$REMOTE_ROOT/wp-content/themes/dija-theme"
           
-          echo "🚀 Iniciando deploy em: $BASE_PATH"
+          echo "🚀 Iniciando deploy em: $REMOTE_ROOT"
+          echo "🎨 Diretório do tema: $REMOTE_THEME_DIR"
+
+          ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no \
+            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }} \
+            "mkdir -p '$REMOTE_ROOT' '$REMOTE_THEME_DIR'"
 
           # 1. Upload para a RAIZ (SSG e SEO)
           rsync -avzc --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$BASE_PATH/
+            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/
 
           # 2. Upload para o TEMA (Ponte WordPress e Assets)
           # Aqui usamos o caminho exato sem risco de //
           rsync -avzc \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$BASE_PATH/wp-content/themes/dija-theme/
+            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/
