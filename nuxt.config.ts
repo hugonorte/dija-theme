@@ -36,7 +36,8 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    '/contato': { prerender: true }
+    '/contato': { prerender: true },
+    '/blog/**': { ssr: false }
   },
 
   compatibilityDate: '2025-01-15',

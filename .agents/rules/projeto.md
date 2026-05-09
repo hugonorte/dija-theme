@@ -43,6 +43,7 @@ trigger: always_on
 - Trabalhar com integração contínua
 - A medida que o projeto for crescendo, refatorar o código quando necessário, e quando refatorar, refazer o teste correspondente à refatoração e rodar o teste para ter certeza que tudo continua funcionando.
 - Separar partes do código em componentes para que possam ser reutilizados.
-- o layout deve utilizar os componentes e scripts do módulo Nuxt UI https://ui.nuxt.com/
+- O layout deve utilizar os componentes e scripts do módulo Nuxt UI https://ui.nuxt.com/
 - Ao usar `vee-validate`, deve-se obrigatoriamente utilizar a função `defineField` do `useForm` para gerar referências mutáveis compatíveis com `v-model`, evitando erros de "readonly" em `form.values`.
 - As respostas no chat do agente devem sempre ser escritas em português brasileiro.
+- **MUITO IMPORTANTE**: O SEO é fundamental para este projeto. O layout, os componentes e as páginas devem ser estruturados seguindo as melhores práticas de SEO (uso semântico de tags HTML, meta tags adequadas, otimização de imagens, etc.).
