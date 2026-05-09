@@ -60,12 +60,19 @@ jobs:
       - name: Deploy to dija.com.br
         # O HOSTINGER_REMOTE_PATH deve ser a raiz: public_html/
         run: |
-          # 1. Enviar arquivos estáticos para a raiz (excluindo WordPress e a pasta _nuxt)
-          rsync -avz --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='.htaccess' --exclude='_nuxt/' \
+          # 1. Enviar arquivos de rotas (HTML) para a raiz (excluindo WordPress e arquivos do tema)
+          rsync -avz --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}
+            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/
 
-          # 2. Enviar especificamente a pasta _nuxt para dentro do tema
+          # 2. Enviar arquivos específicos do TEMA para a pasta do tema
+          # Isso garante que functions.php e style.css fiquem no lugar certo
+          rsync -avz \
+            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./dist/functions.php ./dist/style.css ./dist/index.php ./dist/hero.png ./dist/favicon.ico \
+            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/wp-content/themes/dija-theme/
+
+          # 3. Enviar especificamente a pasta _nuxt para dentro do tema
           rsync -avz --delete \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/_nuxt/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}wp-content/themes/dija-theme/_nuxt/
+            ./dist/_nuxt/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:${{ secrets.HOSTINGER_REMOTE_PATH }}/wp-content/themes/dija-theme/_nuxt/
