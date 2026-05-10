@@ -32,14 +32,15 @@ jobs:
 
       - name: Prepare Artifact
         run: |
-          rm -rf dist
-          cp -R .output/public dist
+          rm -rf site-dist
+          cp -R .output/public site-dist
+          test -f site-dist/index.html
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: site-dist
+          path: site-dist
 
   deploy:
     name: Deploy to dija.com.br (WordPress Theme Folder)
@@ -52,8 +53,8 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: ./dist
+          name: site-dist
+          path: ./site-dist
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
@@ -76,13 +77,16 @@ jobs:
             ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }} \
             "mkdir -p '$REMOTE_ROOT' '$REMOTE_THEME_DIR'"
 
+          test -f ./site-dist/index.html
+          test -f ./site-dist/index.php
+
           # 1. Upload para a RAIZ (SSG e SEO)
           rsync -avzc --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/
+            ./site-dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/
 
           # 2. Upload para o TEMA (Ponte WordPress e Assets)
           # Aqui usamos o caminho exato sem risco de //
           rsync -avzc \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/
+            ./site-dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/
