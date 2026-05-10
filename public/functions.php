@@ -31,6 +31,28 @@ add_filter( 'wp_mail_from_name', function( $name ) {
     return dija_get_config('SMTP_NAME', 'DIJA - Blog');
 } );
 
+// 1.2 Evitar canonical redirect do WordPress em rotas prerenderizadas pelo Nuxt
+add_filter( 'redirect_canonical', function( $redirect_url, $requested_url ) {
+    $request_path = parse_url( $_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH ) ?: '/';
+    $request_path = trim( rawurldecode( $request_path ), '/' );
+
+    $candidate_paths = array();
+
+    if ( $request_path !== '' ) {
+        $candidate_paths[] = __DIR__ . '/' . $request_path . '/index.html';
+    }
+
+    $candidate_paths[] = __DIR__ . '/index.html';
+
+    foreach ( $candidate_paths as $candidate_path ) {
+        if ( file_exists( $candidate_path ) ) {
+            return false;
+        }
+    }
+
+    return $redirect_url;
+}, 10, 2 );
+
 // 2. Registro do Custom Post Type para Mensagens de Contato
 function dija_register_contact_cpt() {
     $labels = array(
