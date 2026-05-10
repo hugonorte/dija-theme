@@ -2,10 +2,18 @@
 /**
  * Tema DIJA - Carregador do Frontend Nuxt
  */
-$candidate_paths = array(
-    __DIR__ . '/index.html',
-    __DIR__ . '/../../../index.html'
-);
+
+$request_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$request_path = trim(rawurldecode($request_path), '/');
+
+$candidate_paths = array();
+
+if ($request_path !== '') {
+    $candidate_paths[] = __DIR__ . '/' . $request_path . '/index.html';
+}
+
+$candidate_paths[] = __DIR__ . '/index.html';
+$candidate_paths[] = __DIR__ . '/../../../index.html';
 
 foreach ($candidate_paths as $index_html) {
     if (file_exists($index_html)) {
@@ -15,4 +23,4 @@ foreach ($candidate_paths as $index_html) {
     }
 }
 
-wp_die('Erro: index.html não encontrado. Verifique se o build do Nuxt foi concluído e enviado para a pasta do tema ou para a raiz do site.');
+wp_die('Erro: index.html não encontrado para a rota solicitada. Verifique se o build do Nuxt foi concluído e enviado para a pasta do tema.');
