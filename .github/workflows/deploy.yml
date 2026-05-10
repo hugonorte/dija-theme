@@ -80,6 +80,15 @@ jobs:
           test -f ./site-dist/index.html
           test -f ./site-dist/index.php
 
+          # Garante explicitamente o index.html nos dois destinos
+          rsync -avzc \
+            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./site-dist/index.html ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/index.html
+
+          rsync -avzc \
+            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
+            ./site-dist/index.html ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/index.html
+
           # 1. Upload para a RAIZ (SSG e SEO)
           rsync -avzc --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
@@ -90,3 +99,7 @@ jobs:
           rsync -avzc \
             -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
             ./site-dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/
+
+          ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no \
+            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }} \
+            "test -f '$REMOTE_ROOT/index.html' && test -f '$REMOTE_THEME_DIR/index.html'"
