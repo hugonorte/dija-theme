@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap');
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: 'Montserrat', sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;

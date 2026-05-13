@@ -1,0 +1,25 @@
+@use "./home";
+
+// Theme overrides for Tailwind v4 (if needed via SCSS)
+:root {
+  --font-sans: 'Montserrat', sans-serif;
+  --color-primary: #ff389d;
+  --color-primary-deep: #e61e8a;
+  --color-primary-dark: #cc1a7a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(255, 56, 157, 0.04), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #fff9fd 100%);
+  color: #241a2d;
+}
+
+::selection {
+  background: rgba(255, 56, 157, 0.18);
+  color: #241a2d;
+}

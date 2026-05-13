@@ -1,0 +1,36 @@
+
+ RUN  v4.1.5 /mnt/sda2/sandbox/wordpress/dija
+
+stdout | tests/unit/pages/index.test.ts
+<Suspense> is an experimental feature and its API will likely change.
+
+ ❯ tests/unit/pages/index.test.ts (4 tests | 1 failed) 3699ms
+     × deve renderizar o título principal (Hero) 2775ms
+     ✓ deve renderizar a seção de artigos 59ms
+     ✓ deve renderizar a seção de agenda 55ms
+     ✓ deve renderizar a seção de comunidade 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/pages/index.test.ts > Página Inicial > deve renderizar o título principal (Hero)
+AssertionError: expected '15+ Anos de Tradição DIJA - Ritmo,Dan…' to contain 'DIJA - Ritmo, Dança e Tradição'
+
+Expected: "DIJA - Ritmo, Dança e Tradição"
+Received: "15+ Anos de Tradição DIJA - Ritmo,Dança e Tradição Mergulhe na pulsação do Nordeste. Aprenda a técnica, sinta o ritmo e viva a tradição da dança que conecta gerações. Conheça a ProfessoraLer ArtigosArtigos sobre a alma e a mecânica do ForróEntenda como o equilíbrio e o peso do corpo definem a conexão entre os parceiros. Técnica & Emoção Post de Teste 1Resumo do post 1 11/05/2024Ler maisVer todos os artigosAgenda de ImersõesReserve seu lugar nas nossas imersões presenciais e online. Vagas limitadas.Workshop Forró das AntigasSão Paulo, SP • 14:00 - 18:00 • PresencialReservar VagaConexão & Abraço (Online)Plataforma Zoom • 19:30 • Ao VivoInscrever-seComunidade DIJAJunte-se a centenas de alunos e evolua sua dança com suporte contínuo.Acesso a todas as videoaulas gravadasFeedback personalizado via vídeo mensalComunidade exclusiva de alunos no TelegramFazer parte da comunidadeFique por dentro das novidades Inscreva-se na nossa newsletter e receba dicas de dança, playlists exclusivas e as novidades da agenda DIJA antes de todo mundo. Quero receber as dicas Respeitamos sua privacidade. Cancele quando quiser."
+
+ ❯ tests/unit/pages/index.test.ts:25:5
+     23|
+     24|     // Verificamos o título principal conforme o design do Stitch
+     25|     expect(wrapper.text()).toContain('DIJA - Ritmo, Dança e Tradição')
+       |     ^
+     26|   })
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  18:51:57
+   Duration  15.86s (transform 9.82s, setup 287ms, import 10.16s, tests 3.70s, environment 1.29s)
+

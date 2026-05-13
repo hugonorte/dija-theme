@@ -11,8 +11,8 @@ useHead({
   }
 })
 
-const title = 'Nuxt Starter Template'
-const description = 'A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours.'
+const title = 'Blog DIJA — Ritmo, Dança e Tradição'
+const description = 'Aulas de Forró e Dança de Salão com a Professora Dija Ferreira. Mergulhe na pulsação do Nordeste.'
 
 useSeoMeta({
   title,
