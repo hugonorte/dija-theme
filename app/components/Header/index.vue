@@ -34,17 +34,49 @@ const links = [
     </template>
 
     <template #body>
-      <UNavigationMenu
-        :items="links"
-        variant="link"
-        orientation="vertical"
-        class="w-full mobile-nav"
-      />
+      <div class="mobile-menu-container">
+        <UNavigationMenu
+          :items="links"
+          variant="link"
+          orientation="vertical"
+          class="w-full mobile-nav"
+        />
+        <div class="cta-container">
+          <UButton
+            to="/contato"
+            label="Entre em Contato"
+            size="xl"
+            block
+            class="cta-button"
+          />
+        </div>
+      </div>
     </template>
   </UHeader>
 </template>
 
 <style lang="scss">
+.mobile-menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem 0.5rem;
+}
+
+.cta-container {
+  display: flex;
+  padding: 1rem 0;
+  margin-top: 1rem;
+}
+
+.cta-button {
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem !important;
+}
+
 .mobile-nav {
   a, span {
     font-size: 1.4rem !important;
@@ -53,3 +85,4 @@ const links = [
 
 /* Estilos específicos para o Header se necessário */
 </style>
+
