@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const links = [
-  { label: 'A Professora', to: '/a-professora' },
-  { label: 'Artigos', to: '/artigos' },
-  { label: 'Agenda', to: '/agenda' },
-  { label: 'Vídeos', to: '/videos' },
-  { label: 'Comunidade', to: '/comunidade' }
+  { label: 'A Professora', to: '/bio' },
+  { label: 'Eventos', to: '/eventos' },
+  { label: 'Turmas', to: '/turmas' },
+  { label: 'Aulas Particulares', to: '/aulas-particulares' },
+  { label: 'Fotos', to: '/fotos' }
 ]
 </script>
 
@@ -33,15 +33,23 @@ const links = [
       />
     </template>
 
-    <template #content>
+    <template #body>
       <UNavigationMenu
         :items="links"
         variant="link"
+        orientation="vertical"
+        class="w-full mobile-nav"
       />
     </template>
   </UHeader>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.mobile-nav {
+  a, span {
+    font-size: 1.4rem !important;
+  }
+}
+
 /* Estilos específicos para o Header se necessário */
 </style>
