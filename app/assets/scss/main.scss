@@ -2,10 +2,10 @@
 
 // Theme overrides for Tailwind v4 (if needed via SCSS)
 :root {
-  --font-sans: 'Montserrat', sans-serif;
-  --color-primary: #ff389d;
-  --color-primary-deep: #e61e8a;
-  --color-primary-dark: #cc1a7a;
+  --font-sans: 'Inter', sans-serif;
+  --color-primary: #ffb2be;
+  --color-primary-deep: #ff4e7c;
+  --color-primary-dark: #bc004b;
 }
 
 html {
@@ -14,12 +14,12 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top, rgba(255, 56, 157, 0.04), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #fff9fd 100%);
-  color: #241a2d;
+    radial-gradient(circle at top, rgba(255, 178, 190, 0.08), transparent 35%),
+    linear-gradient(135deg, #0b1326 0%, #060e20 100%);
+  color: #dae2fd;
 }
 
 ::selection {
-  background: rgba(255, 56, 157, 0.18);
-  color: #241a2d;
+  background: rgba(255, 178, 190, 0.22);
+  color: #dae2fd;
 }

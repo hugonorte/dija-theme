@@ -67,3 +67,12 @@ Para garantir que os testes do Cypress passem de forma consistente no ambiente N
 - **Linguagem**: TypeScript.
 - **Backend**: WordPress REST API.
 - **Ferramentas**: pnpm, Husky, ESLint, Vitest, Cypress.
+
+
+## 6. Sessões do site
+- **Sobre a professora**: Rota:/bio
+- **Turmas**: Rota:/turmas
+- **Notícias**: Rota:/noticias
+- **Contato**: Rota:/contato
+- **Eventos**: Rota:/eventos
+- **Fotos e vídeos**: /midias

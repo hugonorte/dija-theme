@@ -1,15 +1,16 @@
 <script setup lang="ts">
 const links = [
-  { label: 'A Professora', to: '/bio' },
-  { label: 'Eventos', to: '/eventos' },
+  { label: 'Sobre a professora', to: '/bio' },
   { label: 'Turmas', to: '/turmas' },
-  { label: 'Aulas Particulares', to: '/aulas-particulares' },
-  { label: 'Fotos', to: '/fotos' }
+  { label: 'Notícias', to: '/noticias' },
+  { label: 'Eventos', to: '/eventos' },
+  { label: 'Fotos e vídeos', to: '/midias' },
+  { label: 'Contato', to: '/contato' }
 ]
 </script>
 
 <template>
-  <UHeader :links="links">
+  <UHeader :links="links" class="fixed-header">
     <template #left>
       <NuxtLink
         to="/"
@@ -19,6 +20,8 @@ const links = [
         <span class="font-black text-xl tracking-tighter text-primary">DIJA</span>
       </NuxtLink>
     </template>
+
+    <UNavigationMenu :items="links" class="hidden lg:flex" />
 
     <template #right>
       <UColorModeButton />
@@ -80,9 +83,26 @@ const links = [
 .mobile-nav {
   a, span {
     font-size: 1.4rem !important;
+    color: #dae2fd !important;
+    transition: color 0.2s ease;
+
+    &:hover, &:focus, &.router-link-active {
+      color: #ffb2be !important;
+    }
   }
 }
 
 /* Estilos específicos para o Header se necessário */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: rgba(11, 19, 38, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 178, 190, 0.08);
+}
 </style>
 

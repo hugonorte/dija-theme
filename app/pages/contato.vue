@@ -257,16 +257,18 @@ const onFormSubmit = async () => {
 .form-card {
   flex: 2;
   padding: 2.5rem;
-  background: var(--ui-bg);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius-lg);
-  box-shadow: var(--ui-shadow-md);
+  background: rgba(23, 31, 51, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 178, 190, 0.08);
+  border-radius: 1.5rem; /* radius-lg */
+  box-shadow: 0 18px 36px rgba(6, 14, 32, 0.4);
 }
 
 .form-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 2rem;
+  color: var(--ui-neutral-50);
 }
 
 .clean-form {
@@ -282,26 +284,35 @@ const onFormSubmit = async () => {
 }
 
 .label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ui-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-neutral-400);
 }
 
 .input-field {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.875rem 0.25rem;
   background: transparent;
-  border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius-md);
-  color: var(--ui-text);
+  border: none;
+  border-bottom: 2px solid rgba(255, 178, 190, 0.15);
+  border-radius: 0;
+  color: var(--ui-neutral-50);
   font-size: 1rem;
-  &:focus { outline: none; border-color: var(--ui-primary); }
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-bottom-color: var(--ui-primary-500);
+    box-shadow: 0 1px 0 var(--ui-primary-500);
+  }
 }
 
-.textarea-field { min-height: 150px; resize: vertical; }
+.textarea-field { min-height: 120px; resize: vertical; }
 
 .error-text {
-  color: #ef4444;
+  color: #ffb4ab; /* error color in DESIGN.md */
   font-size: 0.85rem;
   font-weight: 600;
   margin-top: 0.25rem;
@@ -311,16 +322,28 @@ const onFormSubmit = async () => {
 
 .submit-button {
   padding: 1rem 3rem;
-  background: var(--ui-primary);
-  color: white;
+  background: linear-gradient(135deg, #ffb2be 0%, #ff4e7c 100%);
+  color: #660025; /* on-primary */
   border: none;
-  border-radius: var(--ui-radius-md);
-  font-weight: 700;
+  border-radius: 9999px;
+  font-weight: 800;
   font-size: 1.125rem;
   cursor: pointer;
-  transition: opacity 0.2s;
-  &:hover { opacity: 0.9; }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  box-shadow: 0 4px 12px rgba(255, 78, 124, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 78, 124, 0.35);
+    filter: brightness(1.05);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 .info-sidebar { flex: 1; }

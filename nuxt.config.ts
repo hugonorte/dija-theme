@@ -45,6 +45,11 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-01-15',
 
+  colorMode: {
+    preference: 'dark',
+    fallback: 'dark'
+  },
+
   eslint: {
     config: {
       stylistic: {
@@ -56,5 +61,17 @@ export default defineNuxtConfig({
 
   typescript: {
     typeCheck: false
+  },
+
+  vite: {
+    server: {
+      watch: {
+        usePolling: true
+      },
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost'
+      }
+    }
   }
 })

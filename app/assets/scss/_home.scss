@@ -1,30 +1,31 @@
-$primary: #ff389d;
-$primary-deep: #e61e8a;
-$primary-dark: #cc1a7a;
-$ink: #241a2d;
-$muted: #6f6677;
-$surface: rgba(255, 255, 255, 0.86);
-$surface-strong: #ffffff;
-$line: rgba(36, 26, 45, 0.08);
-$shadow-lg: 0 28px 60px rgba(56, 22, 74, 0.12);
-$shadow-md: 0 18px 36px rgba(56, 22, 74, 0.10);
-$radius-lg: 28px;
-$radius-md: 22px;
+$primary: #ffb2be;         // Sophisticated Deep Pink
+$primary-deep: #ff4e7c;    // Primary container (neon accent)
+$primary-dark: #bc004b;    // Deeper shade
+$ink: #dae2fd;             // on-surface / text
+$muted: #e4bdc2;           // muted text / on-surface-variant
+$surface: rgba(23, 31, 51, 0.45); // frosted glass container
+$surface-strong: rgba(34, 42, 61, 0.6); // elevated glass container
+$line: rgba(255, 178, 190, 0.08); // pinkish translucent border
+$shadow-lg: 0 28px 60px rgba(6, 14, 32, 0.5);
+$shadow-md: 0 18px 36px rgba(6, 14, 32, 0.4);
+$radius-lg: 1.5rem;        // 24px (from DESIGN.md)
+$radius-md: 0.75rem;       // 12px (from DESIGN.md)
 
 @mixin glass-card {
   background: $surface;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $line;
   box-shadow: $shadow-md;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .home-page {
   color: $ink;
   background:
-    radial-gradient(circle at top left, rgba($primary, 0.14), transparent 30%),
-    radial-gradient(circle at top right, rgba(128, 100, 255, 0.14), transparent 30%),
-    linear-gradient(180deg, #ffffff 0%, #fff7fc 48%, #ffffff 100%);
+    radial-gradient(circle at top left, rgba($primary, 0.08), transparent 35%),
+    radial-gradient(circle at top right, rgba(189, 194, 255, 0.08), transparent 35%),
+    linear-gradient(135deg, #0b1326 0%, #060e20 100%);
   overflow: hidden;
 
   .home-hero {
@@ -38,7 +39,7 @@ $radius-md: 22px;
       width: 20rem;
       height: 20rem;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba($primary, 0.15), transparent 70%);
+      background: radial-gradient(circle, rgba($primary, 0.1), transparent 70%);
       pointer-events: none;
     }
   }
@@ -71,7 +72,7 @@ $radius-md: 22px;
       line-height: 0.94;
       letter-spacing: -0.06em;
       font-weight: 900;
-      color: $primary-dark;
+      color: $primary;
     }
   }
 
@@ -125,7 +126,7 @@ $radius-md: 22px;
     border-radius: $radius-md;
     background: $surface-strong;
     border: 1px solid $line;
-    box-shadow: 0 8px 18px rgba(56, 22, 74, 0.04);
+    box-shadow: $shadow-md;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -134,7 +135,7 @@ $radius-md: 22px;
       font-size: 1.35rem;
       line-height: 1;
       font-weight: 900;
-      color: $primary-dark;
+      color: $primary;
     }
 
     span {
@@ -154,10 +155,10 @@ $radius-md: 22px;
     border-radius: 2rem;
     overflow: hidden;
     background:
-      radial-gradient(circle at 72% 18%, rgba(255, 173, 77, 0.30), transparent 24%),
-      linear-gradient(180deg, rgba(108, 59, 192, 0.32), rgba(255, 255, 255, 0.86));
+      radial-gradient(circle at 72% 18%, rgba($primary, 0.20), transparent 30%),
+      linear-gradient(180deg, rgba(23, 31, 51, 0.6), rgba(6, 14, 32, 0.8));
     box-shadow: $shadow-lg;
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid $line;
     isolation: isolate;
 
     &::after {
@@ -165,7 +166,7 @@ $radius-md: 22px;
       position: absolute;
       inset: auto -6rem -4rem -8rem;
       height: 18rem;
-      background: radial-gradient(circle, rgba($primary, 0.18), transparent 68%);
+      background: radial-gradient(circle, rgba($primary, 0.1), transparent 68%);
       z-index: 0;
       pointer-events: none;
     }
@@ -183,14 +184,14 @@ $radius-md: 22px;
     inset: 2.5rem 3.5rem auto auto;
     width: 12rem;
     height: 12rem;
-    background: rgba(255, 166, 57, 0.24);
+    background: rgba($primary, 0.15);
   }
 
   .visual-orb-two {
     inset: auto auto 2rem 2rem;
     width: 14rem;
     height: 14rem;
-    background: rgba(104, 74, 188, 0.18);
+    background: rgba(189, 194, 255, 0.15);
   }
 
   .hero-image {
@@ -209,9 +210,10 @@ $radius-md: 22px;
     max-width: 17rem;
     border-radius: 1.5rem;
     padding: 1rem 1.1rem;
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow: 0 16px 34px rgba(42, 24, 58, 0.14);
+    background: rgba(23, 31, 51, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid $line;
+    box-shadow: $shadow-md;
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
@@ -251,7 +253,8 @@ $radius-md: 22px;
   .floating-tag {
     padding: 0.4rem 0.75rem;
     background: rgba($primary, 0.10);
-    color: $primary-dark;
+    color: $primary;
+    border: 1px solid $line;
   }
 
   .home-section {
@@ -259,7 +262,7 @@ $radius-md: 22px;
   }
 
   .home-section-soft {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 245, 250, 0.8));
+    background: linear-gradient(180deg, rgba(11, 19, 38, 0.4), rgba(6, 14, 32, 0.6));
   }
 
   .section-heading {
@@ -292,8 +295,9 @@ $radius-md: 22px;
 
   .section-kicker {
     padding: 0.55rem 0.85rem;
-    background: rgba($primary, 0.08);
-    color: $primary-dark;
+    background: rgba($primary, 0.10);
+    color: $primary;
+    border: 1px solid $line;
   }
 
   .feature-row,
@@ -311,8 +315,17 @@ $radius-md: 22px;
   .closing-panel {
     border-radius: $radius-lg;
     border: 1px solid $line;
-    background: $surface-strong;
+    background: $surface;
+    backdrop-filter: blur(12px);
     box-shadow: $shadow-md;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background: $surface-strong;
+      border-color: rgba($primary, 0.3);
+      box-shadow: 0 12px 24px rgba($primary, 0.05);
+      transform: translateY(-2px);
+    }
   }
 
   .feature-card {
@@ -343,7 +356,7 @@ $radius-md: 22px;
     height: 3rem;
     border-radius: 1rem;
     background: linear-gradient(135deg, rgba($primary, 0.14), rgba($primary-deep, 0.08));
-    color: $primary-dark;
+    color: $primary;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -359,7 +372,8 @@ $radius-md: 22px;
     color: $muted;
     border-radius: $radius-lg;
     border: 1px dashed rgba($primary, 0.22);
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(23, 31, 51, 0.45);
+    backdrop-filter: blur(12px);
   }
 
   .post-card {
@@ -390,7 +404,8 @@ $radius-md: 22px;
   .post-chip {
     padding: 0.45rem 0.75rem;
     background: rgba($primary, 0.09);
-    color: $primary-dark;
+    color: $primary;
+    border: 1px solid $line;
   }
 
   .post-date {
@@ -428,7 +443,7 @@ $radius-md: 22px;
     justify-content: space-between;
     gap: 1rem;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 249, 253, 0.94)),
+      linear-gradient(180deg, rgba(23, 31, 51, 0.6), rgba(11, 19, 38, 0.6)),
       $surface-strong;
 
     @media (max-width: 720px) {
@@ -505,8 +520,8 @@ $radius-md: 22px;
     width: 100%;
     padding: 1.5rem;
     background:
-      radial-gradient(circle at top right, rgba($primary, 0.14), transparent 32%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 247, 252, 0.95));
+      radial-gradient(circle at top right, rgba($primary, 0.08), transparent 35%),
+      linear-gradient(180deg, rgba(23, 31, 51, 0.55), rgba(11, 19, 38, 0.55));
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -536,7 +551,7 @@ $radius-md: 22px;
       flex: 1 1 10rem;
       padding: 0.95rem 1rem;
       border-radius: 1.2rem;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(23, 31, 51, 0.6);
       border: 1px solid $line;
       display: flex;
       flex-direction: column;
@@ -566,8 +581,8 @@ $radius-md: 22px;
     justify-content: space-between;
     gap: 1rem;
     background:
-      radial-gradient(circle at left top, rgba($primary, 0.14), transparent 30%),
-      linear-gradient(180deg, #ffffff 0%, #fff6fb 100%);
+      radial-gradient(circle at left top, rgba($primary, 0.08), transparent 35%),
+      linear-gradient(135deg, rgba(23, 31, 51, 0.6) 0%, rgba(6, 14, 32, 0.8) 100%);
 
     @media (max-width: 900px) {
       flex-direction: column;

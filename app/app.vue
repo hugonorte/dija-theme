@@ -28,7 +28,7 @@ useSeoMeta({
   <UApp>
     <Header />
 
-    <UMain>
+    <UMain class="main-content">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -37,3 +37,9 @@ useSeoMeta({
     <Footer />
   </UApp>
 </template>
+
+<style lang="scss">
+.main-content {
+  padding-top: 4.5rem; /* Compensa a altura do header fixo */
+}
+</style>
