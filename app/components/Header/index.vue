@@ -24,7 +24,7 @@ const links = [
     <UNavigationMenu :items="links" class="hidden lg:flex" />
 
     <template #right>
-      <UColorModeButton />
+      <ColorModeButton />
 
       <UButton
         to="https://instagram.com/dijaina"

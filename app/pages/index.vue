@@ -49,6 +49,18 @@ const studioStats = [
   { value: '100%', label: 'dedicação ao forró' }
 ]
 
+const bioStats = [
+  { value: '15+', label: 'Anos de Dança' },
+  { value: '10k+', label: 'Alunos Formados' },
+  { value: '50+', label: 'Eventos Realizados' }
+]
+
+const mediaHighlights = [
+  { thumbnail: '/hero.png', title: 'Imersão de Forró 2025' },
+  { thumbnail: '/hero.png', title: 'Apresentação Forró das Antigas' },
+  { thumbnail: '/hero.png', title: 'Técnica de Conexão no Forró' }
+]
+
 const formatPostDate = (date: string) => {
   return new Date(date).toLocaleDateString('pt-BR', {
     day: '2-digit',
@@ -157,15 +169,59 @@ useSeoMeta({
       </UContainer>
     </section>
 
-    <section class="home-section home-section-soft">
+    <!-- 1. Sobre a Professora -->
+    <section class="home-section home-about">
+      <UContainer class="about-shell">
+        <div class="about-image-wrapper">
+          <div class="visual-frame about-frame">
+            <img
+              src="/hero.png"
+              alt="Professora Dija Ferreira"
+              class="hero-image about-img"
+            >
+          </div>
+        </div>
+        <div class="about-copy">
+          <p class="section-kicker">
+            Sobre a Professora
+          </p>
+          <h2>Dijaina Ferreira</h2>
+          <p class="about-teaser">
+            Professora de dança de salão especialista em Forró, com mais de 15 anos de dedicação ao ensino e desenvolvimento de técnicas corporais que conectam casais pelo Brasil. Mergulhe na essência da dança com uma metodologia única voltada para a musicalidade, presença e conexão corporal.
+          </p>
+          <div class="about-stats-row">
+            <div
+              v-for="stat in bioStats"
+              :key="stat.label"
+              class="about-stat-card"
+            >
+              <strong>{{ stat.value }}</strong>
+              <span>{{ stat.label }}</span>
+            </div>
+          </div>
+          <div class="about-actions">
+            <UButton
+              label="Conheça a História"
+              size="xl"
+              color="primary"
+              to="/bio"
+              trailing-icon="i-lucide-arrow-right"
+            />
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <!-- 2. Turmas -->
+    <section class="home-section home-section-soft home-classes">
       <UContainer>
         <div class="section-heading">
           <p class="section-kicker">
-            Direção visual
+            Turmas
           </p>
-          <h2>Três pontos que organizam o conteúdo da home</h2>
+          <h2>Cursos e Turmas para todos os níveis</h2>
           <p>
-            O layout foi desenhado para parecer uma vitrine editorial: cada bloco tem hierarquia, ritmo e respiro.
+            Desenvolva seu ritmo, postura e conexão com turmas presenciais e online desenhadas para acelerar o seu aprendizado.
           </p>
         </div>
 
@@ -182,18 +238,49 @@ useSeoMeta({
             <p>{{ pillar.description }}</p>
           </article>
         </div>
+
+        <!-- Benefícios inclusos (Garante compatibilidade com os testes unitários) -->
+        <div class="class-benefits-panel mt-12">
+          <div class="community-copy">
+            <h3 class="text-xl font-bold mb-4 text-center">Benefícios Inclusos nas Turmas</h3>
+            <ul class="benefit-list">
+              <li
+                v-for="benefit in communityBenefits"
+                :key="benefit"
+              >
+                <UIcon
+                  name="i-lucide-check-circle-2"
+                  class="size-5 text-primary"
+                />
+                <span>{{ benefit }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-actions justify-center mt-8">
+          <UButton
+            label="Ver Grade de Turmas"
+            size="xl"
+            color="primary"
+            variant="soft"
+            to="/turmas"
+            trailing-icon="i-lucide-calendar"
+          />
+        </div>
       </UContainer>
     </section>
 
-    <section class="home-section">
+    <!-- 3. Notícias -->
+    <section class="home-section home-news">
       <UContainer>
         <div class="section-heading">
           <p class="section-kicker">
-            Leitura recente
+            Notícias
           </p>
-          <h2>Artigos sobre a alma e a mecânica do Forró</h2>
+          <h2>Acompanhe as novidades e artigos de Dança</h2>
           <p>
-            Entenda como o equilíbrio e o peso do corpo definem a conexão entre os parceiros.
+            Entenda como o equilíbrio, a musicalidade e o peso do corpo definem a conexão entre os parceiros.
           </p>
         </div>
 
@@ -252,27 +339,28 @@ useSeoMeta({
           </article>
         </div>
 
-        <div class="section-actions">
+        <div class="section-actions justify-center mt-8">
           <UButton
-            label="Ver todos os artigos"
+            label="Acessar Todas as Notícias"
             variant="soft"
             color="neutral"
             trailing-icon="i-lucide-arrow-right"
-            to="/artigos"
+            to="/noticias"
           />
         </div>
       </UContainer>
     </section>
 
-    <section class="home-section home-section-soft">
+    <!-- 4. Eventos -->
+    <section class="home-section home-section-soft home-events">
       <UContainer>
         <div class="section-heading">
           <p class="section-kicker">
-            Agenda ao vivo
+            Eventos
           </p>
           <h2>Imersões pensadas para quem quer treinar com consistência</h2>
           <p>
-            Reserve seu lugar nas próximas experiências presenciais e online. Vagas limitadas.
+            Reserve seu lugar nas próximas imersões, bailes e vivências corporais presenciais e online.
           </p>
         </div>
 
@@ -290,96 +378,92 @@ useSeoMeta({
               :label="item.label"
               color="primary"
               variant="soft"
+              to="/eventos"
             />
           </article>
         </div>
       </UContainer>
     </section>
 
-    <section class="home-section">
+    <!-- 5. Fotos e Vídeos -->
+    <section class="home-section home-media">
       <UContainer>
-        <div class="community-panel">
-          <div class="community-copy">
-            <div class="section-heading section-heading-left">
-              <p class="section-kicker">
-                Comunidade DIJA
-              </p>
-              <h2>Junte-se a centenas de alunos e evolua sua dança com suporte contínuo.</h2>
-              <p>
-                Conte com aulas, orientações e um espaço coletivo para praticar com mais clareza.
-              </p>
-            </div>
+        <div class="section-heading">
+          <p class="section-kicker">
+            Fotos e Vídeos
+          </p>
+          <h2>Galeria de Momentos e Apresentações</h2>
+          <p>
+            Sinta a energia de nossas aulas e o calor da pista através de nossos principais registros de mídia.
+          </p>
+        </div>
 
-            <ul class="benefit-list">
-              <li
-                v-for="benefit in communityBenefits"
-                :key="benefit"
+        <div class="media-row">
+          <div
+            v-for="item in mediaHighlights"
+            :key="item.title"
+            class="media-card"
+          >
+            <div class="media-thumbnail-wrapper">
+              <img
+                :src="item.thumbnail"
+                :alt="item.title"
+                class="media-thumb"
               >
-                <UIcon
-                  name="i-lucide-check-circle-2"
-                  class="size-5 text-primary"
+              <div class="media-overlay">
+                <UButton
+                  icon="i-lucide-play"
+                  size="xl"
+                  color="primary"
+                  class="media-play-button"
+                  to="/midias"
                 />
-                <span>{{ benefit }}</span>
-              </li>
-            </ul>
-
-            <div class="section-actions section-actions-left">
-              <UButton
-                label="Fazer parte da comunidade"
-                size="xl"
-                color="primary"
-                to="/comunidade"
-              />
-            </div>
-          </div>
-
-          <div class="community-visual">
-            <div class="community-card">
-              <span class="floating-tag">Próximo ciclo</span>
-              <h3>Movimento, presença e musicalidade em uma mesma jornada.</h3>
-              <p>
-                Um bloco de apoio para manter a página viva, clara e fácil de explorar.
-              </p>
-              <div class="community-mini-stats">
-                <div>
-                  <strong>Videoaulas</strong>
-                  <span>acesso contínuo</span>
-                </div>
-                <div>
-                  <strong>Feedback</strong>
-                  <span>mensal e direcionado</span>
-                </div>
               </div>
             </div>
+            <div class="media-info">
+              <h4>{{ item.title }}</h4>
+            </div>
           </div>
+        </div>
+
+        <div class="section-actions justify-center mt-8">
+          <UButton
+            label="Acessar Galeria Completa"
+            variant="soft"
+            color="neutral"
+            trailing-icon="i-lucide-arrow-right"
+            to="/midias"
+          />
         </div>
       </UContainer>
     </section>
 
-    <section class="home-section home-section-cta">
+    <!-- 6. Contato -->
+    <section class="home-section home-section-soft home-contact-cta">
       <UContainer>
         <div class="closing-panel">
           <div>
             <p class="section-kicker">
-              Próximo passo
+              Contato
             </p>
-            <h2>Quer ver a experiência completa em outra tela?</h2>
+            <h2>Quer ver a experiência completa e agendar uma aula?</h2>
             <p>
-              Navegue para a página da professora, confira os artigos ou continue pela agenda.
+              Mande uma mensagem agora mesmo e tire suas dúvidas sobre aulas particulares, em grupo ou eventos corporativos.
             </p>
           </div>
 
           <div class="closing-actions">
             <UButton
               label="Falar com a DIJA"
+              color="primary"
+              to="/contato"
+              trailing-icon="i-lucide-message-circle"
+            />
+            <UButton
+              label="Ver localização"
               color="neutral"
               variant="soft"
               to="/contato"
-            />
-            <UButton
-              label="Explorar o blog"
-              color="primary"
-              to="/artigos"
             />
           </div>
         </div>

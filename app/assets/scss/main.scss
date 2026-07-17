@@ -13,6 +13,12 @@ html {
 }
 
 body {
+  background-color: #f5e5ce;
+  color: #0b1326; /* Cor escura para contrastar com o fundo claro */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
   background:
     radial-gradient(circle at top, rgba(255, 178, 190, 0.08), transparent 35%),
     linear-gradient(135deg, #0b1326 0%, #060e20 100%);

@@ -605,4 +605,159 @@ $radius-md: 0.75rem;       // 12px (from DESIGN.md)
       max-width: 40rem;
     }
   }
+
+  /* 1. Sobre a Professora styling */
+  .about-shell {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    
+    @media (max-width: 900px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+  }
+  
+  .about-image-wrapper, .about-copy {
+    flex: 1 1 0;
+    width: 100%;
+  }
+
+  .about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2rem;
+  }
+  
+  .about-teaser {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: $muted;
+    margin-bottom: 2rem;
+  }
+  
+  .about-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .about-stat-card {
+    flex: 1 1 8rem;
+    padding: 1rem;
+    background: rgba(23, 31, 51, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid $line;
+    border-radius: $radius-md;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    strong {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: $primary;
+    }
+    
+    span {
+      font-size: 0.8rem;
+      color: $muted;
+    }
+  }
+
+  /* 2. Turmas benefits styling */
+  .class-benefits-panel {
+    background: rgba(23, 31, 51, 0.3);
+    border: 1px solid $line;
+    border-radius: $radius-lg;
+    padding: 2rem;
+    max-width: 48rem;
+    margin: 3rem auto 0;
+  }
+
+  /* 5. Fotos e Vídeos styling */
+  .media-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .media-card {
+    flex: 1 1 18rem;
+    padding: 1rem;
+    background: $surface;
+    backdrop-filter: blur(12px);
+    border: 1px solid $line;
+    border-radius: $radius-lg;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      border-color: rgba($primary, 0.3);
+      box-shadow: 0 12px 24px rgba($primary, 0.05);
+      
+      .media-thumb {
+        transform: scale(1.05);
+      }
+      
+      .media-overlay {
+        background: rgba(11, 19, 38, 0.4);
+      }
+      
+      .media-play-button {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba($primary, 0.4);
+      }
+    }
+  }
+  
+  .media-thumbnail-wrapper {
+    position: relative;
+    border-radius: $radius-md;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    isolation: isolate;
+  }
+  
+  .media-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  
+  .media-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 19, 38, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+  }
+  
+  .media-play-button {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 999px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  .media-info {
+    h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: $ink;
+    }
+  }
 }
+

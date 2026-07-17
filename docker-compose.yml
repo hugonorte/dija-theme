@@ -33,7 +33,7 @@ services:
       SMTP_FROM: ${SMTP_FROM}
       SMTP_NAME: "DIJA - Blog"
     volumes:
-      - .:/var/www/html/wp-content/themes/dija-theme
+      - ./.output/public:/var/www/html/wp-content/themes/dija-theme
 
 volumes:
   db_data:
