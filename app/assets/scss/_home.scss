@@ -1,8 +1,8 @@
 $primary: #ffb2be;         // Sophisticated Deep Pink
 $primary-deep: #ff4e7c;    // Primary container (neon accent)
 $primary-dark: #bc004b;    // Deeper shade
-$ink: #dae2fd;             // on-surface / text
-$muted: #e4bdc2;           // muted text / on-surface-variant
+$ink: var(--color-text-primary);       // Dinâmico: Escuro no Light, Claro no Dark
+$muted: var(--color-text-muted);       // Dinâmico: Cinza médio no Light, Cinza claro no Dark
 $surface: rgba(23, 31, 51, 0.45); // frosted glass container
 $surface-strong: rgba(34, 42, 61, 0.6); // elevated glass container
 $line: rgba(255, 178, 190, 0.08); // pinkish translucent border
@@ -21,12 +21,20 @@ $radius-md: 0.75rem;       // 12px (from DESIGN.md)
 }
 
 .home-page {
-  color: $ink;
+  color: var(--color-text-primary);
   background:
     radial-gradient(circle at top left, rgba($primary, 0.08), transparent 35%),
     radial-gradient(circle at top right, rgba(189, 194, 255, 0.08), transparent 35%),
-    linear-gradient(135deg, #0b1326 0%, #060e20 100%);
+    linear-gradient(135deg, #ffffff 0%, #f4f5f7 100%);
   overflow: hidden;
+
+  html.dark & {
+    color: $ink;
+    background:
+      radial-gradient(circle at top left, rgba($primary, 0.08), transparent 35%),
+      radial-gradient(circle at top right, rgba(189, 194, 255, 0.08), transparent 35%),
+      linear-gradient(135deg, #0b1326 0%, #060e20 100%);
+  }
 
   .home-hero {
     position: relative;
@@ -72,7 +80,11 @@ $radius-md: 0.75rem;       // 12px (from DESIGN.md)
       line-height: 0.94;
       letter-spacing: -0.06em;
       font-weight: 900;
-      color: $primary;
+      color: var(--color-primary);
+
+      html.dark & {
+        color: $primary;
+      }
     }
   }
 

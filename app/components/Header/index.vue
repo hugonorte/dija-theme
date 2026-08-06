@@ -16,8 +16,9 @@ const links = [
         to="/"
         class="flex items-center gap-2"
       >
-        <AppLogo class="w-auto h-8 shrink-0" />
-        <span class="font-black text-xl tracking-tighter text-primary">DIJA</span>
+        <span class="text-6xl tracking-tighter text-primary" style="font-family: 'Damion', cursive; font-weight: 400;">
+          Dija Ferreira
+        </span>
       </NuxtLink>
     </template>
 
@@ -83,11 +84,11 @@ const links = [
 .mobile-nav {
   a, span {
     font-size: 1.4rem !important;
-    color: #dae2fd !important;
+    color: var(--color-text-primary) !important;
     transition: color 0.2s ease;
 
     &:hover, &:focus, &.router-link-active {
-      color: #ffb2be !important;
+      color: var(--color-primary) !important;
     }
   }
 }
@@ -99,10 +100,11 @@ const links = [
   left: 0;
   width: 100%;
   z-index: 50;
-  background-color: rgba(11, 19, 38, 0.75);
+  background-color: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 178, 190, 0.08);
+  border-bottom: 1px solid var(--glass-border);
+  transition: var(--transition-smooth);
 }
 </style>
 

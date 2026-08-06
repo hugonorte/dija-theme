@@ -43,11 +43,7 @@ const communityBenefits = [
   'Comunidade exclusiva de alunos no Telegram'
 ]
 
-const studioStats = [
-  { value: '15+', label: 'anos de tradição' },
-  { value: '3', label: 'trilhas de aprendizado' },
-  { value: '100%', label: 'dedicação ao forró' }
-]
+
 
 const bioStats = [
   { value: '15+', label: 'Anos de Dança' },
@@ -100,10 +96,10 @@ useSeoMeta({
             Estúdio digital para dança, técnica e presença
           </div>
 
-          <h1>DIJA - Ritmo, Dança e Tradição</h1>
+          <h1>Dança, Ritmo e Tradição</h1>
 
           <p class="hero-description">
-            Uma página inicial inspirada no Stitch: visual leve, composição em flex e um caminho claro para conhecer a professora, os artigos, a agenda e a comunidade.
+            Seu ponto de encontro com a dança de salão. Conheça a trajetória da professora Dijaina, leia nossos artigos mais recentes, confira a agenda de eventos.
           </p>
 
           <div class="hero-actions">
@@ -121,17 +117,6 @@ useSeoMeta({
               color="neutral"
               to="/artigos"
             />
-          </div>
-
-          <div class="hero-stats">
-            <div
-              v-for="stat in studioStats"
-              :key="stat.label"
-              class="stat-pill"
-            >
-              <strong>{{ stat.value }}</strong>
-              <span>{{ stat.label }}</span>
-            </div>
           </div>
         </div>
 

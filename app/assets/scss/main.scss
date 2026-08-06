@@ -1,11 +1,40 @@
 @use "./home";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Damion&display=swap');
 
-// Theme overrides for Tailwind v4 (if needed via SCSS)
 :root {
-  --font-sans: 'Inter', sans-serif;
-  --color-primary: #ffb2be;
-  --color-primary-deep: #ff4e7c;
-  --color-primary-dark: #bc004b;
+  /* Typography */
+  --font-primary: 'Montserrat', sans-serif;
+
+  /* Colors - Light Theme (Default) */
+  --color-primary: #ff389d;
+  --color-primary-deep: #e61e8a;
+  --color-primary-dark: #cc1a7a;
+  
+  --color-background: #ffffff;
+  --color-text-primary: #333333;
+  --color-text-muted: #666666;
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  
+  /* Utilities */
+  --radius-premium: 20px;
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition-smooth: all 0.3s ease;
+}
+
+html.dark {
+  /* Colors - Dark Theme */
+  --color-background: #121212;
+  --color-text-primary: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  
+  /* Glassmorphism Dark */
+  --glass-bg: rgba(30, 30, 30, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 }
 
 html {
@@ -13,19 +42,74 @@ html {
 }
 
 body {
-  background-color: #f5e5ce;
-  color: #0b1326; /* Cor escura para contrastar com o fundo claro */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: var(--font-primary);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: var(--transition-smooth);
+  -webkit-font-smoothing: antialiased;
 }
 
-html.dark body {
-  background:
-    radial-gradient(circle at top, rgba(255, 178, 190, 0.08), transparent 35%),
-    linear-gradient(135deg, #0b1326 0%, #060e20 100%);
-  color: #dae2fd;
+/* Typography Base */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  transition: var(--transition-smooth);
 }
 
+h1 {
+  font-weight: 900;
+  letter-spacing: -0.05em; /* tracking-tight */
+}
+
+p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  transition: var(--transition-smooth);
+}
+
+/* Selection */
 ::selection {
-  background: rgba(255, 178, 190, 0.22);
-  color: #dae2fd;
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+/* Premium Layout & Components */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-premium {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-premium);
+  box-shadow: var(--shadow-premium);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition-smooth);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-premium:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+html.dark .card-premium:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
 }
