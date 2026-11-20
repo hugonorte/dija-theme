@@ -1,4 +1,7 @@
-name: Build and Deploy
+name: Deploy do tema WordPress
+
+# Envia a pasta wp-theme/ para public_html/wp-content/themes/dija-theme/ na Hostinger.
+# Conteúdo (turmas, eventos, textos) é editado no painel e NÃO depende de deploy.
 
 on:
   push:
@@ -9,97 +12,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: 24
-          cache: 'pnpm'
+          php-version: '8.5'
+          tools: none
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm run generate
-
-      - name: Prepare Artifact
+      - name: Verificar sintaxe do PHP
         run: |
-          rm -rf site-dist
-          cp -R .output/public site-dist
-          test -f site-dist/index.html
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-dist
-          path: site-dist
+          find wp-theme -name '*.php' -print0 | xargs -0 -n1 php -l
+          test -f wp-theme/style.css
+          test -f wp-theme/index.php
 
   deploy:
-    name: Deploy to dija.com.br (WordPress Theme Folder)
-    needs: build
-    # Executa apenas se houver um push na 'master' (incluindo merges) OU disparo manual
+    name: Deploy em dija.com.br (pasta do tema)
+    needs: check
     if: github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
-    
     runs-on: ubuntu-latest
     steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-dist
-          path: ./site-dist
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install SSH Key
+      - name: Instalar chave SSH
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
           known_hosts: unnecessary
           if_key_exists: replace
 
-      - name: Deploy to dija.com.br
+      - name: Enviar tema
         run: |
-          # Definimos a base para evitar erros de barra dupla //
-          # Se o secret for 'public_html/' ele vira 'public_html'
           REMOTE_ROOT=$(echo "${{ secrets.HOSTINGER_REMOTE_PATH }}" | sed 's/\/$//')
           REMOTE_THEME_DIR="$REMOTE_ROOT/wp-content/themes/dija-theme"
-          
-          echo "🚀 Iniciando deploy em: $REMOTE_ROOT"
+          SSH="ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no"
+          TARGET="${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}"
+
           echo "🎨 Diretório do tema: $REMOTE_THEME_DIR"
+          $SSH "$TARGET" "mkdir -p '$REMOTE_THEME_DIR'"
 
-          ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no \
-            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }} \
-            "mkdir -p '$REMOTE_ROOT' '$REMOTE_THEME_DIR'"
+          # --delete: a pasta do tema fica idêntica a wp-theme/ (remove arquivos antigos do Nuxt).
+          # Escopo restrito à pasta do tema; nada fora dela é tocado.
+          rsync -avzc --delete --exclude='.DS_Store' \
+            -e "$SSH" ./wp-theme/ "$TARGET:$REMOTE_THEME_DIR/"
 
-          test -f ./site-dist/index.html
-          test -f ./site-dist/index.php
-
-          # Garante explicitamente o index.html nos dois destinos
-          rsync -avzc \
-            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./site-dist/index.html ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/index.html
-
-          rsync -avzc \
-            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./site-dist/index.html ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/index.html
-
-          # 1. Upload para a RAIZ (SSG e SEO)
-          rsync -avzc --exclude='wp-admin/' --exclude='wp-content/' --exclude='wp-includes/' --exclude='wp-*.php' --exclude='index.php' --exclude='functions.php' --exclude='style.css' --exclude='.htaccess' --exclude='_nuxt/' \
-            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./site-dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_ROOT/
-
-          # 2. Upload para o TEMA (Ponte WordPress e Assets)
-          # Aqui usamos o caminho exato sem risco de //
-          rsync -avzc \
-            -e "ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no" \
-            ./site-dist/ ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}:$REMOTE_THEME_DIR/
-
-          ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no \
-            ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }} \
-            "test -f '$REMOTE_ROOT/index.html' && test -f '$REMOTE_THEME_DIR/index.html'"
+          $SSH "$TARGET" "test -f '$REMOTE_THEME_DIR/style.css' && test -f '$REMOTE_THEME_DIR/functions.php'"
