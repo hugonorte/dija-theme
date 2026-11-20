@@ -86,7 +86,7 @@ function dija_fields( string $post_type ): array {
 	}
 	if ( 'foto' === $post_type ) {
 		return array(
-			'data' => array( 'label' => 'Mês e ano do evento', 'type' => 'month', 'help' => 'Aparece no selo da foto e define a ordem da galeria (mais recentes primeiro). Se ficar vazio, vale o mês atual.' ),
+			'data' => array( 'label' => 'Mês e ano do evento', 'type' => 'month', 'help' => 'Obrigatório. Aparece no selo da foto e define a ordem da galeria (mais recentes primeiro).' ),
 		);
 	}
 	if ( 'evento' === $post_type ) {

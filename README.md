@@ -50,17 +50,49 @@ sem etapa de build e sem plugins obrigatórios.
 Tudo o que aparece no site é editado no painel (`/wp-admin`). O conteúdo
 salvo aparece **na hora**, sem precisar de programador ou de deploy.
 
-O site tem três lugares de edição:
+Onde cada coisa é editada:
 
 | Onde | O que se edita |
 |---|---|
-| Menu **Turmas** | Os cards de turmas (home e página `/turmas`) |
-| Menu **Eventos** | Os eventos (carrossel da home e página `/eventos`) |
-| **Aparência → Personalizar → Conteúdo do site** | Textos fixos e fotos de cada seção |
+| **Turmas → Todas as turmas** | As turmas (cards da home e página `/turmas`) |
+| **Turmas → Locais** | Os locais das aulas (nome, endereço, ordem) |
+| **Eventos → Todos os eventos** | Os eventos (carrossel da home e página `/eventos`) |
+| **Eventos → Fotos da galeria** | As fotos da galeria (fim da página `/eventos`) |
+| **Eventos → Eventos das fotos** / **Tags das fotos** | Os nomes usados nos filtros da galeria |
+| **Contatos** | As mensagens recebidas pelo formulário e os IPs bloqueados |
+| **Páginas** | Bio, Contato e páginas de texto (ex.: Privacidade) |
+| **Posts** | O blog (notícias) |
+| **Aparência → Personalizar → Conteúdo do site** | Textos fixos e fotos de cada seção, contatos e mensagens do WhatsApp |
 
 > No Personalizador, a tela da direita mostra a prévia do site. Nada vai ao ar
 > até clicar em **Publicar**. Se um campo for apagado, o site volta a mostrar
 > o texto padrão daquele campo.
+
+### 2.0 Primeiros passos (uma vez só)
+
+Ao colocar o site no ar pela primeira vez:
+
+1. **Configurações → Geral → Título do site**: o nome que aparece na aba do
+   navegador e no Google (ex.: “Dija Ferreira | Dança de Salão”).
+2. **Páginas → Adicionar**, crie:
+   - **Bio**, com o endereço (slug) **`bio`**: a página completa sobre a
+     professora (seção 2.5). Sem ela, `/bio` dá erro “Página não encontrada”
+     e o botão “Saiba mais” da home leva a esse erro.
+   - **Contato**, com o endereço **`contato`** (pode ficar sem texto).
+   - Opcional: **Política de privacidade** (`privacidade`) e **Termos de uso**
+     (`termos`), endereços que o site antigo já usava.
+
+   O endereço (slug) fica no painel lateral da página, em **Link**
+   (ou **URL**). O título pode ser qualquer um; o que importa é o endereço.
+3. **Configurações → Links permanentes → Salvar alterações** (sem mudar nada):
+   ativa os endereços `/turmas` e `/eventos`.
+4. **Personalizar → Conteúdo do site → Topo e contatos**: Instagram e
+   WhatsApp reais.
+5. Cadastre locais, turmas, eventos e fotos (seções 2.3 e 2.4).
+6. Envie uma mensagem de teste pelo formulário e confira se chegou no e-mail
+   (seção 2.6).
+7. Se o site usar cache (LiteSpeed, na Hostinger), limpe o cache depois de
+   grandes mudanças, para os visitantes verem a versão nova.
 
 ### 2.1 Topo do site (nome, menu e botão)
 
@@ -68,12 +100,18 @@ O site tem três lugares de edição:
 
 - **Nome no topo**: o texto à esquerda (ex.: DIJA FERREIRA).
 - **Botão do topo — texto / link**: o botão laranja (ex.: MATRICULE-SE → `/contato/`).
-- **Instagram** e **WhatsApp**: usados na seção de contato. Digite o
-  `@usuario` e o número com DDD; o site monta os links sozinho.
+- **Instagram** e **WhatsApp**: digite o `@usuario` e o número com DDD; o
+  site monta os links sozinho. O **WhatsApp** aparece na seção de contato e
+  é o número que **recebe as mensagens** dos botões “Quero participar”
+  (turmas) e “Saiba mais” (página `/eventos`).
 
-Os links do menu (INÍCIO, TURMAS, EVENTOS, SOBRE) já vêm prontos. Para
-mudá-los, crie um menu em **Aparência → Menus**, marque o local
-**“Menu principal (topo)”** e salve. Para voltar ao padrão, desmarque o local.
+Os links do menu (INÍCIO, TURMAS, EVENTOS, SOBRE) já vêm prontos. “SOBRE”
+leva à página **Bio** quando ela existe (seção 2.0) e, senão, à seção Sobre
+da página inicial. Para mudar os links (por exemplo, incluir “NOTÍCIAS”),
+crie um menu em **Aparência → Menus**, adicione as páginas desejadas, marque
+o local **“Menu principal (topo)”** e salve; para voltar ao padrão, desmarque
+o local. O botão laranja do topo continua vindo do Personalizador. Submenus
+não são exibidos.
 
 ### 2.2 Destaque da página inicial (nome, frase e foto)
 
@@ -112,7 +150,7 @@ As turmas aparecem em dois lugares:
 #### Passo 1 — Cadastrar os locais
 
 Menu **Turmas → Locais**. No formulário à esquerda, preencha e clique em
-**Adicionar novo local**:
+**Adicionar local**:
 
 | Campo | Exemplo | Observação |
 |---|---|---|
@@ -228,14 +266,17 @@ ao menos uma foto.
 
 **Passo 1 — Eventos das fotos (uma vez por evento):** **Eventos → Eventos das
 fotos**, digite o nome (ex.: “São João de Caruaru 2026”) e clique em
-**Adicionar**. É o nome usado no filtro “Evento” e na legenda da foto.
+**Adicionar evento**. É o nome usado no filtro “Evento” e na legenda da foto.
+(Também dá para cadastrar pela tela da foto, no link “Cadastrar ou editar
+eventos das fotos”.)
 
-**Passo 2 — Adicionar cada foto:** **Eventos → Fotos → Adicionar foto**:
+**Passo 2 — Adicionar cada foto:** **Eventos → Fotos da galeria** e o botão
+**Adicionar foto**, no topo da tela:
 
 | Onde | O que fazer |
 |---|---|
 | Caixa **Foto** (lateral) | **Enviar ou escolher a foto**: envie do computador ou escolha na Biblioteca de Mídia. No campo “Texto alternativo”, descreva a cena (acessibilidade e Google) |
-| **Mês e ano do evento** | Ex.: junho de 2026. Define o selo e a ordem. Vazio = mês atual |
+| **Mês e ano do evento** | Obrigatório. Ex.: junho de 2026. Define o selo e a ordem da galeria |
 | Caixa **Eventos das fotos** | Escolha **um** evento |
 | Caixa **Tags das fotos** | Digite palavras separadas por vírgula (ex.: `forró, casamento, Recife`) e clique em **Adicionar**; as já usadas aparecem como sugestão |
 
@@ -252,6 +293,10 @@ de Caruaru · 06/2026”).
   **Personalizar → Conteúdo do site → Eventos**.
 - A galeria mostra **24 fotos por página**; acima disso aparecem os números
   das páginas.
+- **Formato das fotos:** prefira fotos **horizontais**, com pelo menos 1200 px
+  de largura. Na grade, cada foto aparece recortada em formato 4:3 (centro da
+  imagem); ao clicar, ela é exibida inteira. O site gera sozinho as versões
+  menores para o celular.
 
 ### 2.5 Sobre a professora
 
@@ -270,8 +315,8 @@ de Caruaru · 06/2026”).
 no editor da página. A **Imagem destacada** da página, se houver, substitui
 a foto nessa página. Os títulos e destaques são os mesmos do Personalizador.
 
-> A página precisa se chamar **Bio** e ter o endereço (slug) **`bio`**. É o
-> endereço que o tema usa para aplicar o layout especial.
+> O que importa é o endereço (slug) **`bio`**: é por ele que o tema aplica o
+> layout especial. O título da página pode ser outro (ex.: “Sobre a Dija”).
 
 ### 2.6 Contato e mensagens recebidas
 
@@ -314,7 +359,10 @@ A página `/contato` mostra só esta seção e precisa ter o endereço (slug)
   **Configurações → Leitura → Página de posts**.
 - **Outras páginas** (ex.: Política de privacidade): menu **Páginas**.
   Elas usam o layout padrão de texto do site.
-- **Ícone da aba do navegador:** **Aparência → Personalizar → Identidade do site → Ícone do site**.
+- **Nome do site** (aba do navegador e Google): **Configurações → Geral →
+  Título do site**.
+- **Ícone da aba do navegador:** **Aparência → Personalizar → Identidade do
+  site → Ícone do site** (imagem quadrada, mínimo 512×512 px).
 
 ---
 
