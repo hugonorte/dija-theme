@@ -34,7 +34,7 @@ get_header();
 			<button class="btn4 carousel-prev" type="button" aria-label="Divulgação anterior"<?php echo $dija_multi ? '' : ' hidden'; ?>><span class="ico ico-chevron" aria-hidden="true"></span></button>
 			<div class="slides">
 				<?php foreach ( $dija_promo as $i => $dija_turma ) :
-					$dija_alt = trim( dija_field( $dija_turma->ID, 'ritmo' ) . ' ' . dija_field( $dija_turma->ID, 'nivel' ) . ' — ' . dija_weekday_label( dija_field( $dija_turma->ID, 'dia' ) ) . ', ' . dija_field( $dija_turma->ID, 'horario' ) ); ?>
+					$dija_alt = trim( dija_turma_ritmo( $dija_turma->ID ) . ' ' . dija_turma_nivel( $dija_turma->ID ) . ' — ' . dija_weekday_label( dija_field( $dija_turma->ID, 'dia' ) ) . ', ' . dija_field( $dija_turma->ID, 'horario' ) ); ?>
 					<figure class="slide promo-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" aria-roledescription="slide" aria-label="<?php echo esc_attr( ( $i + 1 ) . ' de ' . count( $dija_promo ) ); ?>">
 						<a href="#proximas-turmas">
 							<?php echo get_the_post_thumbnail( $dija_turma, 'full', array( 'alt' => $dija_alt, 'loading' => 0 === $i ? 'eager' : 'lazy', 'fetchpriority' => 0 === $i ? 'high' : 'auto', 'sizes' => '(max-width: 767px) 100vw, 1240px' ) ); ?>

@@ -20,7 +20,7 @@ page bio 'Bio' "$BIO" >/dev/null
 page contato 'Contato' '' >/dev/null
 
 if [ -z "$($WP post list --post_type=turma --field=ID --post_status=any)" ]; then
-  turma() { # ordem dia horario ritmo nivel cor icone
+  turma() { # ordem dia horario ritmos(chaves, vírgula) nivel(chave) cor icone
     id=$($WP post create --post_type=turma --post_status=publish --menu_order="$1" --post_title="$2 · $3 · $4 $5" --porcelain)
     $WP post meta update "$id" dija_dia "$2" >/dev/null
     $WP post meta update "$id" dija_horario "$3" >/dev/null
@@ -29,10 +29,10 @@ if [ -z "$($WP post list --post_type=turma --field=ID --post_status=any)" ]; the
     $WP post meta update "$id" dija_cor "$6" >/dev/null
     $WP post meta update "$id" dija_icone "$7" >/dev/null
   }
-  turma 1 SEGUNDA '19h às 20h' FORRÓ INICIANTE red sun
-  turma 2 TERÇA '20h às 21h' FORRÓ INTERMEDIÁRIO teal moon
-  turma 3 QUARTA '19h às 20h' FORRÓ AVANÇADO purple star-big
-  turma 4 SEXTA '20h às 21h' FORRÓ AVANÇADO ochre sun2
+  turma 1 SEGUNDA '19h às 20h' forro iniciante red sun
+  turma 2 TERÇA '20h às 21h' forro intermediario teal moon
+  turma 3 QUARTA '19h às 20h' forro avancado purple star-big
+  turma 4 SEXTA '20h às 21h' 'samba,forro' avancado ochre sun2
 fi
 
 if [ -z "$($WP post list --post_type=evento --field=ID --post_status=any)" ]; then
@@ -79,8 +79,8 @@ if [ -z "$($WP post list --post_type=turma --meta_key=dija_status --meta_value=p
     $WP post term set "$id" local "$9" --by=id >/dev/null
     $WP media import "$IMG/${10}" --post_id="$id" --featured_image --title="Divulgação $4 $5" >/dev/null
   }
-  proxima 10 qui '19h às 20h' 'FORRÓ' 'INICIANTE' 'Início em 08/01' purple star-big "$A" bg-hero.jpg
-  proxima 11 sab '10h às 11h30' 'XOTE' 'TODOS OS NÍVEIS' 'Início em 10/01' ochre sun2 "$B" bg-sobre.jpg
+  proxima 10 qui '19h às 20h' 'zouk' 'iniciante' 'Início em 08/01' purple star-big "$A" bg-hero.jpg
+  proxima 11 sab '10h às 11h30' 'samba,forro,soltinho' 'infantil' 'Início em 10/01' ochre sun2 "$B" bg-sobre.jpg
 fi
 
 # Galeria de fotos de exemplo (Eventos → Fotos). Imagens do tema, só para teste.

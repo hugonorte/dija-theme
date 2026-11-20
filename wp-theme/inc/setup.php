@@ -89,9 +89,34 @@ function dija_is_current_url( string $url ): bool {
 add_filter( 'excerpt_length', fn() => 30 );
 add_filter( 'excerpt_more', fn() => '…' );
 
-/** Favicon do tema enquanto não houver "Ícone do site" definido no Personalizador. */
-add_action( 'wp_head', function () {
-	if ( ! has_site_icon() ) {
-		printf( '<link rel="icon" href="%s" sizes="any">' . "\n", esc_url( get_theme_file_uri( 'assets/favicon.ico' ) ) );
+/**
+ * Favicon do tema (coração), enquanto não houver "Ícone do site" definido em
+ * Aparência → Personalizar → Identidade do site (que tem prioridade):
+ *   - icon.svg: navegadores modernos, nítido em qualquer tamanho;
+ *   - favicon.ico (16/32/48 px): navegadores antigos;
+ *   - apple-touch-icon.png (180 px): atalho na tela inicial do iPhone/iPad.
+ * Fonte do desenho: design-systems/dija-ferreira-home/assets/icon.svg.
+ */
+function dija_favicon_tags(): void {
+	if ( has_site_icon() ) {
+		return;
 	}
-} );
+	printf( '<link rel="icon" href="%s" sizes="32x32">' . "\n", esc_url( get_theme_file_uri( 'assets/favicon.ico' ) ) );
+	printf( '<link rel="icon" href="%s" type="image/svg+xml">' . "\n", esc_url( get_theme_file_uri( 'assets/icon.svg' ) ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( get_theme_file_uri( 'assets/apple-touch-icon.png' ) ) );
+}
+add_action( 'wp_head', 'dija_favicon_tags' );
+add_action( 'admin_head', 'dija_favicon_tags' ); // a aba do painel também mostra o ícone
+add_action( 'login_head', 'dija_favicon_tags' );
+
+/**
+ * Pedidos diretos a /favicon.ico (feitos por alguns navegadores e pelo Google)
+ * recebem o ícone do tema, em vez do logotipo padrão do WordPress.
+ * Só vale quando não existe um arquivo favicon.ico físico na raiz do site.
+ */
+add_action( 'do_favicon', function () {
+	if ( ! has_site_icon() ) {
+		wp_safe_redirect( get_theme_file_uri( 'assets/favicon.ico' ), 302 );
+		exit;
+	}
+}, 1 ); // antes da função padrão do WordPress (prioridade 10), que enviaria o logotipo dele
