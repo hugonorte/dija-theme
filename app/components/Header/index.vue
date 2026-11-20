@@ -14,15 +14,15 @@ const links = [
     <template #left>
       <NuxtLink
         to="/"
-        class="flex items-center gap-2"
+        class="brand-link"
       >
-        <span class="text-6xl tracking-tighter text-primary" style="font-family: 'Damion', cursive; font-weight: 400;">
+        <span class="brand-logo">
           Dija Ferreira
         </span>
       </NuxtLink>
     </template>
 
-    <UNavigationMenu :items="links" class="hidden lg:flex" />
+    <UNavigationMenu :items="links" class="desktop-nav" />
 
     <template #right>
       <ColorModeButton />
@@ -43,7 +43,7 @@ const links = [
           :items="links"
           variant="link"
           orientation="vertical"
-          class="w-full mobile-nav"
+          class="mobile-nav"
         />
         <div class="cta-container">
           <UButton
@@ -60,51 +60,80 @@ const links = [
 </template>
 
 <style lang="scss">
-.mobile-menu-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 1rem 0.5rem;
-}
-
-.cta-container {
-  display: flex;
-  padding: 1rem 0;
-  margin-top: 1rem;
-}
-
-.cta-button {
-  font-weight: 800 !important;
-  border-radius: 999px !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.9rem !important;
-}
-
-.mobile-nav {
-  a, span {
-    font-size: 1.4rem !important;
-    color: var(--color-text-primary) !important;
-    transition: color 0.2s ease;
-
-    &:hover, &:focus, &.router-link-active {
-      color: var(--color-primary) !important;
-    }
-  }
-}
-
-/* Estilos específicos para o Header se necessário */
 .fixed-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 50;
-  background-color: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
-  transition: var(--transition-smooth);
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-default);
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.brand-logo {
+  font-family: var(--font-primary);
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+}
+
+.desktop-nav {
+  display: none;
+  
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
+.mobile-menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 16px 8px;
+}
+
+.mobile-nav {
+  width: 100%;
+  
+  a, span {
+    font-family: var(--font-secondary);
+    font-size: 1.2rem !important;
+    font-weight: 500;
+    color: var(--color-text-primary) !important;
+    text-transform: uppercase;
+    transition: color var(--transition-fast);
+
+    &:hover, &:focus, &.router-link-active {
+      color: var(--color-brand) !important;
+    }
+  }
+}
+
+.cta-container {
+  display: flex;
+  padding: 16px 0;
+  margin-top: 16px;
+}
+
+.cta-button {
+  font-weight: 600 !important;
+  border-radius: var(--radius-default) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.9rem !important;
+  font-family: var(--font-secondary);
+  background: var(--color-brand) !important;
+  color: var(--color-white) !important;
 }
 </style>
 

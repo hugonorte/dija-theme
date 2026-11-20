@@ -1,31 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "@nuxt/ui";
 
 @theme static {
   --font-sans: 'Inter', sans-serif;
+  --font-display: 'Barlow Condensed', sans-serif;
 
-  --color-dija-pink-50: #fff0f2;
-  --color-dija-pink-100: #ffd9de;
-  --color-dija-pink-200: #ffb2be;
-  --color-dija-pink-300: #ff8598;
-  --color-dija-pink-400: #ff4e7c;
-  --color-dija-pink-500: #ff185b;
-  --color-dija-pink-600: #bc004b;
-  --color-dija-pink-700: #900038;
-  --color-dija-pink-800: #660025;
-  --color-dija-pink-900: #400014;
-  --color-dija-pink-950: #20000a;
+  --color-brand: #5B00FF;
+  --color-brand-hover: #7200FF;
+  --color-brand-soft: #A77BFF;
+  
+  /* Nuxt UI primary mapping (dija-pink) */
+  --color-dija-pink-50: #f2e6ff;
+  --color-dija-pink-100: #e0ccff;
+  --color-dija-pink-200: #c6a6ff;
+  --color-dija-pink-300: #a77bff;
+  --color-dija-pink-400: #8b4cff;
+  --color-dija-pink-500: #5B00FF;
+  --color-dija-pink-600: #4900cc;
+  --color-dija-pink-700: #360099;
+  --color-dija-pink-800: #240066;
+  --color-dija-pink-900: #120033;
+  --color-dija-pink-950: #09001a;
 
-  --color-dija-slate-50: #dae2fd;
-  --color-dija-slate-100: #bdc2ff;
-  --color-dija-slate-200: #a8afff;
-  --color-dija-slate-300: #31394d;
-  --color-dija-slate-400: #e4bdc2;
-  --color-dija-slate-500: #2d3449;
-  --color-dija-slate-600: #222a3d;
-  --color-dija-slate-700: #171f33;
-  --color-dija-slate-800: #131b2e;
-  --color-dija-slate-900: #0b1326;
-  --color-dija-slate-950: #060e20;
+  --color-dija-black: #000000;
+  --color-dija-near-black: #111111;
+  --color-dija-dark-surface: #181818;
+  
+  /* Nuxt UI neutral mapping (dija-slate) */
+  --color-dija-slate-50: #f2f3f3;
+  --color-dija-slate-100: #dde2e2;
+  --color-dija-slate-200: #c3c9c9;
+  --color-dija-slate-300: #a6adad;
+  --color-dija-slate-400: #888888;
+  --color-dija-slate-500: #666666;
+  --color-dija-slate-600: #444444;
+  --color-dija-slate-700: #333333;
+  --color-dija-slate-800: #181818;
+  --color-dija-slate-900: #111111;
+  --color-dija-slate-950: #000000;
+  
+  --color-dija-white: #FFFFFF;
+  --color-dija-off-white: #F2F3F3;
+  --color-dija-cool-gray: #DDE2E2;
+  --color-dija-gray: #888888;
+  
+  --color-dija-border-dark: #333333;
+  --color-dija-border-light: #D5D5D5;
 }
