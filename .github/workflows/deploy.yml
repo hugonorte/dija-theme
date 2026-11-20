@@ -1,18 +1,26 @@
 name: Deploy do tema WordPress
 
 # Envia a pasta wp-theme/ para public_html/wp-content/themes/dija-theme/ na Hostinger.
-# Conteúdo (turmas, eventos, textos) é editado no painel e NÃO depende de deploy.
+# Conteúdo (turmas, eventos, fotos, textos) é editado no painel e NÃO depende de deploy.
+#
+# - check: roda em todo push (master/dev), em PRs abertos para a master e no disparo manual.
+# - deploy: só em push na master (ex.: merge de PR) ou no disparo manual, e só se o check passar.
+#
+# Secrets: HOSTINGER_SSH_KEY, HOSTINGER_SERVER_IP, HOSTINGER_SSH_PORT,
+#          HOSTINGER_USERNAME, HOSTINGER_REMOTE_PATH
+#          HOSTINGER_KNOWN_HOSTS (recomendado: impressão digital do servidor SSH)
+# Variável (opcional): SITE_URL — padrão https://dija.com.br
 
 on:
   push:
     branches: [ master, dev ]
   pull_request:
     branches: [ master ]
-    types: [ closed ]
   workflow_dispatch:
 
 jobs:
   check:
+    name: Verificações
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,17 +32,34 @@ jobs:
           php-version: '8.5'
           tools: none
 
-      - name: Verificar sintaxe do PHP
+      - name: Sintaxe do PHP
+        run: find wp-theme -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Sintaxe do JavaScript
+        run: node --check wp-theme/assets/app.js
+
+      - name: Regras do projeto
         run: |
-          find wp-theme -name '*.php' -print0 | xargs -0 -n1 php -l
           test -f wp-theme/style.css
           test -f wp-theme/index.php
+          test -f wp-theme/functions.php
+          # Layout somente com flexbox: GRID é proibido.
+          if grep -nE 'display:\s*(inline-)?grid|grid-template' wp-theme/assets/styles.css; then
+            echo "::error::GRID encontrado em styles.css (regra do projeto: use flexbox)."
+            exit 1
+          fi
 
   deploy:
-    name: Deploy em dija.com.br (pasta do tema)
+    name: Deploy em produção (pasta do tema)
     needs: check
-    if: github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
+    # Um deploy por vez; um novo espera o anterior terminar (rsync --delete não pode rodar em paralelo).
+    concurrency:
+      group: deploy-producao
+      cancel-in-progress: false
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://dija.com.br' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,14 +68,22 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          known_hosts: unnecessary
+          known_hosts: ${{ secrets.HOSTINGER_KNOWN_HOSTS || 'unnecessary' }}
           if_key_exists: replace
 
       - name: Enviar tema
+        env:
+          KNOWN_HOSTS: ${{ secrets.HOSTINGER_KNOWN_HOSTS }}
         run: |
           REMOTE_ROOT=$(echo "${{ secrets.HOSTINGER_REMOTE_PATH }}" | sed 's/\/$//')
           REMOTE_THEME_DIR="$REMOTE_ROOT/wp-content/themes/dija-theme"
-          SSH="ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=no"
+          if [ -n "$KNOWN_HOSTS" ]; then
+            STRICT=yes
+          else
+            STRICT=no
+            echo "::warning::Secret HOSTINGER_KNOWN_HOSTS ausente: a identidade do servidor SSH não está sendo verificada."
+          fi
+          SSH="ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=$STRICT"
           TARGET="${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}"
 
           echo "🎨 Diretório do tema: $REMOTE_THEME_DIR"
@@ -62,3 +95,21 @@ jobs:
             -e "$SSH" ./wp-theme/ "$TARGET:$REMOTE_THEME_DIR/"
 
           $SSH "$TARGET" "test -f '$REMOTE_THEME_DIR/style.css' && test -f '$REMOTE_THEME_DIR/functions.php'"
+
+      - name: Teste de fumaça (o site novo está no ar?)
+        run: |
+          fail=0
+          for path in / /turmas/ /eventos/; do
+            url="${SITE_URL%/}$path"
+            html=$(curl -fsSL --retry 3 --retry-delay 5 -A "dija-deploy-check" "$url") || { echo "::error::$url não respondeu com sucesso."; fail=1; continue; }
+            if echo "$html" | grep -q '/_nuxt/'; then
+              echo "::error::$url ainda serve o HTML estático do Nuxt. Apague os restos do Nuxt na raiz do public_html (workflow 'Limpar restos do Nuxt')."
+              fail=1
+            elif ! echo "$html" | grep -q 'themes/dija-theme/assets/styles.css'; then
+              echo "::error::$url não está usando o tema dija-theme (o tema está ativo no painel?)."
+              fail=1
+            else
+              echo "✅ $url"
+            fi
+          done
+          exit $fail
