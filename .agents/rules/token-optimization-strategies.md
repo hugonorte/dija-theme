@@ -3,7 +3,7 @@ trigger: always_on
 ---
 # Token Optimization Strategies (Resumo)
 
-Consulte `.agents/TOKEN_OPTIMIZATION_QUICK_START.md` e `.agents/README_TOKEN_OPTIMIZATION.md` para estratégias completas.
+Consulte `.agents/memory/` (arquitetura, convenções, arquivos críticos e decisões) antes de explorar o código.
 Regras principais:
 1. Sempre verifique o cache (`.agents/memory/`) primeiro.
 2. Não leia arquivos completos; use `grep_search` e leia blocos usando as linhas Iniciais/Finais em `view_file`.

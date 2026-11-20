@@ -1,64 +1,72 @@
-# Nuxt Starter Template
+# Site Dija Ferreira — tema WordPress
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+Site da professora de dança de salão Dija Ferreira (https://dija.com.br/).
+Tema WordPress clássico em PHP, sem build e sem plugins obrigatórios.
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+## Estrutura
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
-
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
-
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
-
-## Quick Start
-
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
+```
+wp-theme/                 Tema (vai para wp-content/themes/dija-theme/)
+├── functions.php         Carrega os módulos de inc/
+├── inc/
+│   ├── helpers.php       Textos padrão, imagens, links
+│   ├── setup.php         Suportes, CSS/JS, menu, favicon
+│   ├── content-types.php Turmas e Eventos (campos fixos no painel)
+│   ├── customizer.php    Textos/fotos em Aparência > Personalizar
+│   └── contact.php       Formulário (REST dija/v1/contact), mensagens, SMTP
+├── template-parts/       Seções reutilizáveis (hero, turmas, eventos, sobre, contato)
+├── front-page.php        Página inicial
+├── archive-turma.php     /turmas
+├── archive-evento.php    /eventos
+├── page-bio.php          /bio
+├── page-contato.php      /contato
+├── page.php, single.php, index.php, 404.php
+└── assets/               styles.css, app.js, img/, icons/ (fontes SVG)
+scripts/
+├── wp.sh                 WP-CLI no Docker (ex.: sh scripts/wp.sh plugin list)
+└── seed-dev.sh           Conteúdo inicial do ambiente local
+design-systems/           Protótipo HTML aprovado (referência visual; fora do git)
 ```
 
-## Deploy your own
+## Ambiente local
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
-
-## Setup
-
-Make sure to install the dependencies:
+Requisitos: Docker.
 
 ```bash
-pnpm install
+docker compose up -d          # http://localhost:8080
+sh scripts/seed-dev.sh        # páginas Bio/Contato, 4 turmas e 1 evento
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+As versões são fixas e iguais às da produção (WordPress 7.1.5 + PHP 8.5).
+Ao mudar a tag em `docker-compose.yml`, recrie o container com os arquivos
+do núcleo novos:
 
 ```bash
-pnpm dev
+docker compose up -d --force-recreate --renew-anon-volumes wordpress
+sh scripts/wp.sh core update-db
 ```
 
-## Production
+Variáveis de SMTP (opcionais) vêm do `.env`: `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`.
 
-Build the application for production:
+## Onde cada conteúdo é editado
 
-```bash
-pnpm build
-```
+| Conteúdo | Painel |
+|---|---|
+| Turmas (cards) | menu **Turmas** — campo “Ordem” define a posição |
+| Eventos (carrossel e /eventos) | menu **Eventos** — ilustração = imagem destacada |
+| Textos fixos e fotos | **Aparência → Personalizar → Conteúdo do site** |
+| Bio completa | página **Bio** (endereço `bio`) |
+| Mensagens do formulário | menu **Contatos** |
+| Menu do topo (opcional) | **Aparência → Menus**, local “Menu principal” |
 
-Locally preview production build:
+## Deploy
 
-```bash
-pnpm preview
-```
+`.github/workflows/deploy.yml`: em push na `master` (ou manual), verifica a
+sintaxe do PHP e envia `wp-theme/` por `rsync --delete` para
+`public_html/wp-content/themes/dija-theme/` na Hostinger. Secrets:
+`HOSTINGER_SSH_KEY`, `HOSTINGER_SERVER_IP`, `HOSTINGER_SSH_PORT`,
+`HOSTINGER_USERNAME`, `HOSTINGER_REMOTE_PATH`.
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+Conteúdo editado no painel aparece na hora; deploy só é necessário quando o
+código do tema muda.

@@ -1,48 +1,29 @@
 ---
 name: Hot Paths & Critical Files
-description: Frequently modified files, stable core areas, and change impact zones for DIJA Blog
+description: Frequently modified files, stable core areas, and change impact zones for the DIJA site
 type: reference
 source: Extracted from memory system for .agents/memory/
 ---
 
-# Hot Paths & Critical Files — Quick Reference (DIJA Blog)
+# Hot Paths & Critical Files — Quick Reference (DIJA)
 
 ## High-Frequency Zones (Change Often)
-
-These files/dirs change frequently and should be understood when context is needed:
-
-### Pages
-- `app/pages/` — Blog routes, post viewing, and archive pages.
-- Expect modifications when introducing new types of content or optimizing SEO tags for specific pages.
-
-### Components
-- `app/components/` — Nuxt UI wrapped components.
-- Heavily modified files include layouts, forms, and cards displaying blog posts.
-
-### WordPress API Integrations
-- `server/api/` or `app/composables/` handling the WordPress fetching logic.
-
-### Tests
-- `*.spec.ts` files (Vitest) — Added/updated with features under TDD.
-- `cypress/` tests (Cypress) — E2E test coverage for forms and critical user flows.
+- `wp-theme/template-parts/` — section markup (hero, turmas, eventos, sobre, contato).
+- `wp-theme/assets/styles.css` — all styles (desktop first, mobile block at the end).
+- `wp-theme/inc/helpers.php` — default texts (`dija_defaults()`).
 
 ## Stable Core (Rarely Change)
-
-These are unlikely to need modification:
-- `package.json` — Nuxt UI and other dependencies.
-- `vitest.config.ts` — Vitest setup stable.
-- `cypress.config.ts` — Cypress setup stable.
+- `wp-theme/inc/contact.php` — contact REST endpoint, spam protection, SMTP.
+- `wp-theme/inc/content-types.php` — CPT and meta registration (changing meta keys orphans saved data).
+- `docker-compose.yml` — versions pinned to production.
 
 ## Impact Zones (Changes Break Multiple Places)
-
-Editing these requires careful consideration of side effects:
-- `nuxt.config.ts` — Affects Nuxt UI, global SCSS, SEO modules, and routing.
-- Global SCSS files in `app/assets/scss/` — Because we rely on SCSS for all styling, changes here can impact the entire site.
-- Shared Nuxt UI layout wrappers.
+- CSS tokens and masks at the top of `styles.css` (`--u`, `--tear`, `--mask-*`, `--icon-*`).
+- Field definitions in `dija_fields()` — used by meta boxes, sanitizing, REST and templates.
+- Customizer keys — renaming loses the professor's saved texts.
 
 ## Red Flags (Likely to Cause Issues)
-
-When editing these, slow down and test thoroughly:
-- **SCSS Flexbox Layouts**: Ensure responsive testing since we do not use Tailwind Grid.
-- **Form components using Vee-Validate**: Make sure `defineField` is strictly used to avoid readonly proxy errors.
-- **SEO tags**: Changing meta configurations can impact search rankings, verify any changes with `<Head>` or `useSeoMeta()`.
+- Renaming `dija_*` meta/theme_mod keys (silently drops saved content).
+- Absolute positioning for editable content (breaks with longer texts) — keep sections in flow.
+- Using GRID (project rule: FLEX only).
+- Deploy: files left in `public_html/` root (old static HTML) would shadow WordPress routes.

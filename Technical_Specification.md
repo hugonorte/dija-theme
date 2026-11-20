@@ -1,78 +1,50 @@
-# Especificação Técnica: Blog DIJA (Nuxt 4 + WordPress)
+# Especificação Técnica: Site DIJA (tema WordPress em PHP)
 
 ## 1. Resumo do Projeto
-- **Objetivo**: Frontend moderno e performático para o blog da professora Dijaina Ferreira.
-- **Arquitetura**: Headless CMS (WordPress como backend, Nuxt como frontend estático).
-- **Entrega**: O build final é injetado como um tema WordPress no diretório `wp-content/themes/dija-theme/`.
+- **Objetivo**: Site da professora de dança de salão Dijaina (Dija) Ferreira.
+- **Arquitetura**: WordPress tradicional com tema próprio em PHP (`wp-theme/`). O WordPress gera as páginas no servidor; não há frontend separado nem etapa de build.
+- **Entrega**: A pasta `wp-theme/` é publicada em `wp-content/themes/dija-theme/`.
 
----
+## 2. Princípios
+- **Sem plugins obrigatórios**: tudo usa APIs nativas e estáveis do WordPress (`register_post_type`, `register_post_meta`, `add_meta_box`, Personalizador, REST API). Atualizações do WordPress não devem exigir mudanças no tema.
+- **Conteúdo sem deploy**: turmas, eventos, textos e fotos são editados no painel e aparecem na hora.
+- **Layout que não quebra**: campos com formulário fixo (sem editor livre onde o layout é rígido); seções em fluxo (flexbox), com alturas mínimas, para acomodar textos maiores ou mais itens.
 
-## 2. Metodologia de Qualidade (Diretrizes para @qa e @engineer)
+## 3. Modelo de conteúdo
+| Tipo | Campos | Uso |
+|---|---|---|
+| `turma` | dia, horario, ritmo, nivel, descricao, cor, icone (+ ordem) | Cards na home e em `/turmas` |
+| `evento` | título, descricao, botao_texto, botao_link, imagem destacada (+ ordem) | Carrossel na home e lista em `/eventos` |
+| `contact_message` | criado pelo formulário | Menu “Contatos”, com resposta por e-mail |
+| Personalizador | textos/fotos de hero, turmas, eventos, sobre, contato, Instagram, WhatsApp | Textos únicos |
 
-### 2.1. Workflow Gatekeeper (Pré-Push)
-Antes de qualquer submissão ao repositório, o código deve obrigatoriamente passar no comando:
-```bash
-pnpm check-all
-```
-Este comando executa sequencialmente:
-1. **Lint**: Verificação de estilo e boas práticas (ESLint).
-2. **Typecheck**: Verificação de tipos estáticos (TypeScript).
-3. **Generate**: Build completo (SSG) para validar a integridade da compilação.
+Metadados são gravados com prefixo `dija_` e expostos na REST API.
 
-### 2.2. Estratégia de Testes (TDD)
-- **Unitários**: Vitest para composables e lógica de helpers.
-- **E2E**: Cypress para fluxos de navegação e integração com a API do WP.
-- **Regra**: O teste deve ser concebido junto ou antes da funcionalidade.
+## 4. Padrões de desenvolvimento
+- **PHP**: compatível com 8.1+ (produção em 8.5). Escapar toda saída (`esc_html`, `esc_attr`, `esc_url`), sanitizar toda entrada, nonce e `current_user_can` em salvamentos.
+- **Nomes**: funções com prefixo `dija_`; código em inglês, textos ao usuário em português brasileiro.
+- **CSS**: um arquivo (`assets/styles.css`), custom properties no `:root`, unidades proporcionais ao layout (`--u`), fontes com `clamp()`. **Layout somente com FLEX; GRID é proibido.**
+- **Responsivo**: desktop em escala proporcional; abaixo de 768px, layout empilhado com menu hambúrguer.
+- **JS**: sem dependências (`assets/app.js`): menu, carrossel e envio do formulário.
+- **SEO e acessibilidade**: HTML semântico (um `<h1>` por página), textos alternativos, `aria-*` nos controles, imagens AVIF com reserva.
 
-### 2.3. Padrões de Estabilidade E2E (Aprendizados de Campo)
-Para garantir que os testes do Cypress passem de forma consistente no ambiente Nuxt, as seguintes regras devem ser seguidas em formulários e elementos interativos:
+## 5. Qualidade
+- `php -l` em todos os arquivos (roda no CI com PHP 8.5).
+- Conferência visual em desktop (1536px, Full HD, 4K) e celular (360–430px) após mudanças de layout.
+- Log do PHP vazio em `wp-content/debug.log` (o Docker local liga `WP_DEBUG_LOG`).
 
-1.  **Isolamento de Hidratação (`<ClientOnly>`)**: No Nuxt 4, o processo de hidratação pode "resetar" o DOM e destruir listeners de evento enquanto o Cypress já está interagindo. **Sempre envolva formulários críticos em `<ClientOnly>`** para garantir que a interação ocorra apenas no DOM estável do lado do cliente.
-2.  **Visibilidade Determinística (`v-show` vs `v-if`)**: Para elementos que o Cypress precisa validar a presença (como mensagens de erro), prefira `v-show`. Isso mantém o elemento no DOM o tempo todo, evitando erros de "elemento não encontrado" durante transições rápidas de estado.
-3.  **Seletores Padrão (`name` e `id`)**: Nunca remova os atributos `name` e `id` dos inputs. Testes E2E frequentemente dependem de seletores como `input[name="xxx"]` para localizar campos de forma robusta.
-4.  **Botões e Submissão**: Utilize `<button type="submit">` dentro de um `<form @submit.prevent="...">`. Esta é a forma mais estável para o Cypress disparar eventos de submissão e interceptar requisições XHR/Fetch.
-5.  **Reatividade Síncrona**: No handler de submissão, as atualizações de estado da UI (como exibir erros de validação) devem ocorrer de forma síncrona antes de chamadas assíncronas (await). Isso garante que o Cypress detecte as mudanças na interface sem timeouts.
+## 6. Deploy
+- **Hospedagem**: Hostinger (servidor compartilhado), WordPress 7.1.5 + PHP 8.5.
+- **Pipeline**: GitHub Actions (`deploy.yml`) — lint de PHP e `rsync --delete` restrito à pasta do tema, em push na `master` ou disparo manual.
+- **Git flow**: desenvolvimento na `dev`; produção via merge na `master`.
 
----
-
-## 3. Padrões de Desenvolvimento (@engineer)
-
-### 3.1. TypeScript e Segurança de Dados
-- **Null Safety**: Serviços e Composables devem retornar `null` (e não `undefined`) para representar dados não encontrados.
-- **Exemplo**: `Promise<WordPressPost | null>`.
-- **Tratamento de Rotas**: Parâmetros de rota (`route.params`) devem ser tratados com valores padrão (ex: `|| ''`) para evitar erros de tipo `string | undefined`.
-- **Proibição do `any`**: Tipagem estrita é obrigatória. Use interfaces como `WordPressPost`, `WordPressPage`, etc.
-
-### 3.2. Estilo e Interface
-- **Layout**: Uso obrigatório de **FLEX**. O uso de GRID é proibido por regra de projeto.
-- **Estilização**: Priorizar arquivos `.scss` para manter o template Vue limpo.
-- **Nuxt UI v4**: Componentes devem seguir o padrão da v4, utilizando o wrapper `<UApp>` no `app.vue`.
-
-### 3.3. Exceções de Linting Aceitáveis
-- **v-html**: Permitido apenas para renderizar o conteúdo bruto do WordPress. Deve ser silenciado localmente no topo do bloco `<template>` com:
-  `<!-- eslint-disable vue/no-v-html -->`.
-- **Nuxt Config Order**: A regra de ordem de chaves está desabilitada no `nuxt.config.ts` para evitar conflitos lógicos do plugin.
-
----
-
-## 4. Arquitetura de Deploy
-- **Ambiente**: Hostinger (Servidor Compartilhado).
-- **Pipeline**: GitHub Actions (`deploy.yml`) dispara o build e envia os arquivos via `rsync`.
-- **Arquivos Obrigatórios**: `index.php` e `style.css` (metadados do tema) devem estar na pasta `public/` para garantir o reconhecimento do tema pelo WordPress.
-
----
-
-## 5. Tecnologias Principais
-- **Frontend**: Nuxt 4, Nuxt UI v4, Tailwind CSS v4.
-- **Linguagem**: TypeScript.
-- **Backend**: WordPress REST API.
-- **Ferramentas**: pnpm, Husky, ESLint, Vitest, Cypress.
-
-
-## 6. Sessões do site
-- **Sobre a professora**: Rota:/bio
-- **Turmas**: Rota:/turmas
-- **Notícias**: Rota:/noticias
-- **Contato**: Rota:/contato
-- **Eventos**: Rota:/eventos
-- **Fotos e vídeos**: /midias
+## 7. Páginas do site
+| Rota | Template |
+|---|---|
+| `/` | `front-page.php` |
+| `/turmas` | `archive-turma.php` |
+| `/eventos` | `archive-evento.php` |
+| `/bio` | `page-bio.php` (página “Bio”) |
+| `/contato` | `page-contato.php` (página “Contato”) |
+| Notícias (blog), posts e páginas | `index.php`, `single.php`, `page.php` |
+| Fotos e vídeos (`/midias`) | a fazer |
