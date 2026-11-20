@@ -13,10 +13,22 @@ services:
     ports:
       - "3306:3306"
 
+  # Ajusta o dono do volume de uploads para o usuário do Apache (www-data, uid 33).
+  # Sem isto, o volume nasce com dono root e o WordPress não consegue salvar imagens.
+  uploads-perms:
+    image: busybox:1.37
+    command: chown -R 33:33 /uploads
+    volumes:
+      - wp_uploads:/uploads
+    restart: "no"
+
   wordpress:
     depends_on:
       - db
-    image: wordpress:latest
+      - uploads-perms
+    # Versão exata: `docker compose pull` não troca o WordPress/PHP sem aviso.
+    # Igual à produção (Hostinger): WordPress 7.1.5 + PHP 8.5. Ao atualizar lá, mude aqui.
+    image: wordpress:7.1.5-php8.5-apache
     container_name: dija_wordpress
     restart: always
     ports:
@@ -26,6 +38,11 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress_password
       WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_AUTO_UPDATE_CORE', false );
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: ${SMTP_USER}
@@ -33,7 +50,11 @@ services:
       SMTP_FROM: ${SMTP_FROM}
       SMTP_NAME: "DIJA - Blog"
     volumes:
-      - ./.output/public:/var/www/html/wp-content/themes/dija-theme
+      # Tema PHP (código-fonte direto, sem build)
+      - ./wp-theme:/var/www/html/wp-content/themes/dija-theme
+      # Uploads da biblioteca de mídia persistem entre recriações do container
+      - wp_uploads:/var/www/html/wp-content/uploads
 
 volumes:
   db_data:
+  wp_uploads:

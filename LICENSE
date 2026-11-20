@@ -1,21 +1,153 @@
-MIT License
+TERMO DE TITULARIDADE E LICENCIAMENTO
+Tema WordPress "Dija Theme" — https://github.com/hugonorte/dija-theme
 
-Copyright (c) 2025 Nuxt UI Templates
+Copyright (c) 2026 Hugo Norte. Todos os direitos reservados, ressalvado o
+disposto na Cláusula 3.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+CLÁUSULA 1 — DO OBJETO E DAS DEFINIÇÕES
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1.1. O presente Termo disciplina a titularidade e as condições de uso dos
+elementos que compõem este repositório e o tema WordPress dele resultante
+(doravante, "Obra").
+
+1.2. Para os fins deste Termo, considera-se:
+
+  I  - "Componentes Visuais": o layout e o projeto gráfico do sítio
+       eletrônico, compreendendo a composição, a disposição dos elementos, a
+       paleta de cores, a tipografia aplicada, as texturas, as bordas e
+       máscaras gráficas, as ilustrações, os ícones e demais criações
+       estéticas, bem como os arquivos que os materializam, notadamente:
+       a) wp-theme/assets/styles.css;
+       b) wp-theme/assets/img/ (todas as imagens);
+       c) wp-theme/assets/icons/ (todos os desenhos vetoriais);
+       d) wp-theme/assets/favicon.ico;
+       e) o protótipo e os materiais de referência contidos em
+          design-systems/, ainda que não versionados;
+
+  II - "Código-Fonte": os programas de computador escritos em PHP e em
+       JavaScript, notadamente os arquivos com extensão .php contidos em
+       wp-theme/ e o arquivo wp-theme/assets/app.js, bem como os scripts
+       contidos em scripts/ e em .github/workflows/.
+
+
+CLÁUSULA 2 — DOS COMPONENTES VISUAIS: TITULARIDADE EXCLUSIVA E VEDAÇÃO DE CÓPIA
+
+2.1. Os Componentes Visuais constituem obra intelectual de autoria e
+titularidade exclusiva de HUGO NORTE, protegida nos termos do art. 5º,
+incisos XXVII e XXVIII, da Constituição da República Federativa do Brasil
+de 1988, e do art. 7º, caput e inciso VIII, da Lei nº 9.610, de 19 de
+fevereiro de 1998 (Lei de Direitos Autorais).
+
+2.2. A proteção ora declarada independe de registro, nos termos do art. 18
+da Lei nº 9.610/1998, e é igualmente assegurada nos países signatários da
+Convenção de Berna para a Proteção das Obras Literárias e Artísticas,
+promulgada no Brasil pelo Decreto nº 75.699, de 6 de maio de 1975, e do
+Acordo TRIPS, promulgado pelo Decreto nº 1.355, de 30 de dezembro de 1994.
+
+2.3. Pertencem ao autor, com exclusividade, os direitos morais e
+patrimoniais sobre os Componentes Visuais (arts. 22, 24 e 28 da Lei
+nº 9.610/1998).
+
+2.4. É VEDADA, sem autorização prévia e expressa do titular, por escrito,
+qualquer forma de utilização dos Componentes Visuais, inclusive, mas não
+limitada a (art. 29 da Lei nº 9.610/1998):
+  I   - a reprodução parcial ou integral;
+  II  - a adaptação, a modificação ou qualquer outra transformação, inclusive
+        a criação de layouts derivados ou substancialmente semelhantes;
+  III - a distribuição, a comercialização, a cessão ou o licenciamento a
+        terceiros;
+  IV  - a utilização em outros sítios eletrônicos, temas, modelos
+        ("templates"), aplicativos ou materiais de qualquer natureza.
+
+2.5. A disponibilização dos Componentes Visuais neste repositório, ainda
+que público, NÃO implica cessão, licença ou renúncia de direitos, os quais
+se interpretam restritivamente, nos termos do art. 4º da Lei
+nº 9.610/1998.
+
+2.6. A violação do disposto nesta Cláusula sujeita o infrator às sanções
+civis previstas nos arts. 101 a 110 da Lei nº 9.610/1998, sem prejuízo da
+responsabilidade penal prevista no art. 184 do Decreto-Lei nº 2.848, de 7 de
+dezembro de 1940 (Código Penal).
+
+2.7. Nos termos do art. 8º, inciso I, da Lei nº 9.610/1998, a proteção
+recai sobre a expressão concreta dos Componentes Visuais, e não sobre ideias,
+métodos ou conceitos abstratos.
+
+
+CLÁUSULA 3 — DO CÓDIGO-FONTE: LICENÇA LIVRE COM ATRIBUIÇÃO OBRIGATÓRIA
+
+3.1. O Código-Fonte é programa de computador protegido pela Lei nº 9.609,
+de 19 de fevereiro de 1998 (Lei do Software), à qual se aplica, no que
+couber, o regime das obras literárias da Lei nº 9.610/1998 (art. 2º da
+Lei nº 9.609/1998).
+
+3.2. Por se tratar de código desenvolvido para a plataforma de código aberto
+WordPress, distribuída sob a GNU General Public License, versão 2 ou
+posterior, o Código-Fonte é licenciado, nos termos do art. 9º da Lei
+nº 9.609/1998, sob a mesma licença: GNU GENERAL PUBLIC LICENSE, VERSÃO 2,
+OU (A CRITÉRIO DO LICENCIADO) QUALQUER VERSÃO POSTERIOR, publicada pela
+Free Software Foundation, cujo texto integral acompanha este repositório no
+arquivo COPYING e está disponível em
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
+
+3.3. É, portanto, PERMITIDO copiar, modificar e distribuir o Código-Fonte,
+no todo ou em parte, desde que observadas as condições da referida licença,
+em especial as seguintes:
+  I   - menção expressa à origem, mediante a manutenção intacta dos avisos
+        de direitos autorais e de autoria existentes, com a indicação de que
+        o código foi obtido em https://github.com/hugonorte/dija-theme,
+        de autoria de Hugo Norte (Seção 1 da GPL v2);
+  II  - indicação, nos arquivos modificados, das alterações realizadas e
+        das respectivas datas (Seção 2, alínea "a", da GPL v2);
+  III - distribuição de obras derivadas sob a mesma licença (Seção 2,
+        alínea "b", da GPL v2), acompanhadas do respectivo código-fonte
+        ou de oferta de acesso a ele (Seção 3 da GPL v2).
+
+3.4. A licença prevista nesta Cláusula NÃO se estende aos Componentes
+Visuais definidos no item 1.2, inciso I, os quais permanecem regidos
+exclusivamente pela Cláusula 2. Quem copiar o Código-Fonte deverá
+substituir integralmente os Componentes Visuais por criações próprias ou
+devidamente licenciadas.
+
+3.5. O Código-Fonte é fornecido "NO ESTADO EM QUE SE ENCONTRA", sem
+garantias de qualquer espécie, nos termos das Seções 11 e 12 da GPL v2.
+
+
+CLÁUSULA 4 — DOS ELEMENTOS DE TERCEIROS
+
+4.1. Não se incluem na titularidade declarada neste Termo, permanecendo
+sujeitos às respectivas licenças e legislações:
+  I   - o WordPress e suas bibliotecas, regidos pela GNU General Public
+        License, versão 2 ou posterior (https://wordpress.org/about/license/);
+  II  - as fontes tipográficas "Oswald" e "Roboto Condensed", carregadas a
+        partir do serviço Google Fonts, regidas pelas licenças publicadas
+        por seus autores (https://fonts.google.com);
+  III - as fotografias de pessoas retratadas, cujo uso observa o direito à
+        imagem previsto no art. 5º, inciso X, da Constituição Federal e no
+        art. 20 da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil),
+        sendo vedado seu uso fora deste sítio eletrônico sem autorização da
+        pessoa retratada;
+  IV  - os textos e demais conteúdos inseridos pelo painel administrativo do
+        WordPress, cuja titularidade pertence a seus respectivos autores.
+
+
+CLÁUSULA 5 — DAS VERSÕES ANTERIORES
+
+5.1. As versões deste repositório anteriores à adoção deste Termo,
+constantes do histórico de versões (git), que incluíam código derivado do
+modelo "Nuxt UI Templates", permanecem regidas pela licença MIT então
+vigente (Copyright (c) 2025 Nuxt UI Templates), no que se refere àquele
+código. Tal código não integra a versão atual da Obra.
+
+
+CLÁUSULA 6 — DISPOSIÇÕES FINAIS
+
+6.1. Pedidos de autorização para uso dos Componentes Visuais deverão ser
+dirigidos ao titular, Hugo Norte, por meio do perfil
+https://github.com/hugonorte.
+
+6.2. Este Termo é regido pelas leis da República Federativa do Brasil.
+
+6.3. A tolerância quanto ao descumprimento de qualquer disposição deste
+Termo não implica renúncia de direitos ou novação.

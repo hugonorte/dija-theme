@@ -1,0 +1,77 @@
+name: Limpar restos do Nuxt (uso único)
+
+# O deploy antigo (Nuxt) copiava HTML estático para a RAIZ do public_html
+# (index.html, _nuxt/, turmas/index.html, ...). O servidor entrega esses
+# arquivos no lugar do WordPress, escondendo o site novo.
+#
+# Este workflow só roda manualmente (Actions → "Limpar restos do Nuxt" → Run).
+# Por padrão é uma SIMULAÇÃO: apenas lista o que seria apagado.
+# Marque "executar" para apagar de fato.
+#
+# Segurança: só considera itens que comprovadamente vieram do Nuxt
+# (HTML contendo "/_nuxt/" ou a pasta _nuxt). Nunca toca em wp-admin,
+# wp-content, wp-includes, arquivos wp-*.php, index.php ou .htaccess.
+
+on:
+  workflow_dispatch:
+    inputs:
+      executar:
+        description: 'Apagar de fato (desmarcado = só listar)'
+        type: boolean
+        default: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-producao
+      cancel-in-progress: false
+    steps:
+      - name: Instalar chave SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          known_hosts: ${{ secrets.HOSTINGER_KNOWN_HOSTS || 'unnecessary' }}
+          if_key_exists: replace
+
+      - name: Listar / apagar restos do Nuxt
+        env:
+          KNOWN_HOSTS: ${{ secrets.HOSTINGER_KNOWN_HOSTS }}
+          EXECUTAR: ${{ inputs.executar }}
+        run: |
+          REMOTE_ROOT=$(echo "${{ secrets.HOSTINGER_REMOTE_PATH }}" | sed 's/\/$//')
+          STRICT=$([ -n "$KNOWN_HOSTS" ] && echo yes || echo no)
+          SSH="ssh -p ${{ secrets.HOSTINGER_SSH_PORT }} -o StrictHostKeyChecking=$STRICT"
+          TARGET="${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_SERVER_IP }}"
+
+          $SSH "$TARGET" "ROOT='$REMOTE_ROOT' EXECUTAR='$EXECUTAR' sh -s" <<'REMOTE'
+          set -eu
+          cd "$ROOT"
+          is_nuxt() { grep -q '/_nuxt/' "$1" 2>/dev/null; }
+          found=0
+          act() {
+            found=1
+            if [ "$EXECUTAR" = "true" ]; then rm -rf -- "$1" && echo "🗑️  apagado: $1"; else echo "• seria apagado: $1"; fi
+          }
+
+          # Arquivos HTML soltos na raiz gerados pelo Nuxt
+          for f in index.html 200.html 404.html; do
+            [ -f "$f" ] && is_nuxt "$f" && act "$f"
+          done
+          # Pasta de assets do Nuxt
+          [ -d _nuxt ] && act _nuxt
+          # Pastas de rotas pré-renderizadas: só se TODOS os arquivos forem .html/.json
+          # e o index.html for do Nuxt.
+          for d in */; do
+            d=${d%/}
+            case "$d" in wp-admin|wp-content|wp-includes|cgi-bin|.well-known) continue ;; esac
+            [ -f "$d/index.html" ] && is_nuxt "$d/index.html" || continue
+            if [ -z "$(find "$d" -type f ! -name '*.html' ! -name '*.json' -print -quit)" ]; then
+              act "$d"
+            else
+              echo "⚠️  ignorado (tem outros tipos de arquivo, verifique à mão): $d"
+            fi
+          done
+          [ "$found" = 0 ] && echo "✅ Nenhum resto do Nuxt encontrado na raiz."
+          [ "$EXECUTAR" = "true" ] || echo "(simulação: nada foi apagado)"
+          REMOTE

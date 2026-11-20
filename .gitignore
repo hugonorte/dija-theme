@@ -1,13 +1,5 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
-
-# Node dependencies
-node_modules
+# Protótipo e recortes de referência (arquivos grandes, fora do git)
+design-systems/
 
 # Logs
 logs
@@ -17,12 +9,9 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode
 
 # Local env files
 .env
 .env.*
 !.env.example
-
-# Cypress
-cypress/screenshots/
-
