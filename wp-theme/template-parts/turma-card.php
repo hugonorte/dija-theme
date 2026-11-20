@@ -21,8 +21,8 @@ $dija_dia   = dija_weekday_label( dija_field( $dija_id, 'dia' ) );
 		<h3 class="h3"><?php echo esc_html( $dija_dia ); ?></h3>
 		<p class="t1"><?php echo esc_html( dija_field( $dija_id, 'horario' ) ); ?></p>
 		<p class="t2">
-			<span><?php echo esc_html( dija_field( $dija_id, 'ritmo' ) ); ?></span>
-			<span><?php echo esc_html( dija_field( $dija_id, 'nivel' ) ); ?></span>
+			<span><?php echo esc_html( dija_turma_ritmo( $dija_id ) ); ?></span>
+			<span><?php echo esc_html( dija_turma_nivel( $dija_id ) ); ?></span>
 		</p>
 		<span class="ico ico-star-sm" aria-hidden="true"></span>
 		<?php if ( $dija_name || $dija_addr ) : ?>
@@ -32,5 +32,5 @@ $dija_dia   = dija_weekday_label( dija_field( $dija_id, 'dia' ) );
 			</address>
 		<?php endif; ?>
 	</article>
-	<a class="mini-card-cta card-cta brush" href="<?php echo dija_esc_link( dija_turma_whatsapp_url( $dija_turma, $dija_name ?: 'local a definir', $dija_addr ) ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( dija_mod( 'turmas_cta_label' ) . ': ' . dija_field( $dija_id, 'ritmo' ) . ', ' . $dija_dia . ', ' . dija_field( $dija_id, 'horario' ) . ' (abre o WhatsApp)' ); ?>"><span class="ico ico-whatsapp" aria-hidden="true"></span><?php echo esc_html( dija_mod( 'turmas_cta_label' ) ); ?></a>
+	<a class="mini-card-cta card-cta brush" href="<?php echo dija_esc_link( dija_turma_whatsapp_url( $dija_turma, $dija_name ?: 'local a definir', $dija_addr ) ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( dija_mod( 'turmas_cta_label' ) . ': ' . dija_turma_ritmo( $dija_id ) . ', ' . $dija_dia . ', ' . dija_field( $dija_id, 'horario' ) . ' (abre o WhatsApp)' ); ?>"><span class="ico ico-whatsapp" aria-hidden="true"></span><?php echo esc_html( dija_mod( 'turmas_cta_label' ) ); ?></a>
 </li>

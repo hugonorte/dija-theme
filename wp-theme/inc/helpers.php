@@ -144,7 +144,7 @@ function dija_whatsapp_url( string $message = '' ): string {
  */
 function dija_turma_whatsapp_url( WP_Post $turma, string $local, string $address = '' ): string {
 	$replace = array(
-		'{turma}'    => trim( dija_field( $turma->ID, 'ritmo' ) . ' ' . dija_field( $turma->ID, 'nivel' ) ),
+		'{turma}'    => trim( dija_turma_ritmo( $turma->ID ) . ' ' . dija_turma_nivel( $turma->ID ) ),
 		'{local}'    => $local,
 		'{endereco}' => preg_replace( '/\s+/', ' ', $address ),
 		'{dia}'      => dija_weekday_label( dija_field( $turma->ID, 'dia' ) ),

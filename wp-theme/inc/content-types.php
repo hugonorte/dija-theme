@@ -67,6 +67,87 @@ function dija_weekday_label( string $value ): string {
 	return $key ? dija_weekdays()[ $key ] : strtoupper( $value );
 }
 
+/** Ritmos / estilos de dança (várias opções por turma). */
+function dija_ritmos(): array {
+	return array(
+		'samba'                   => 'SAMBA',
+		'forro'                   => 'FORRÓ',
+		'danca-de-salao'          => 'DANÇA DE SALÃO',
+		'soltinho'                => 'SOLTINHO',
+		'zouk'                    => 'ZOUK',
+		'bolero'                  => 'BOLERO',
+		'carimbo'                 => 'CARIMBÓ',
+		'tango'                   => 'TANGO',
+		'kizomba'                 => 'KIZOMBA',
+		'sertanejo-universitario' => 'SERTANEJO UNIVERSITÁRIO',
+		'bachata'                 => 'BACHATA',
+	);
+}
+
+/** Níveis (uma opção por turma). */
+function dija_niveis(): array {
+	return array(
+		'iniciante'     => 'INICIANTE',
+		'intermediario' => 'INTERMEDIÁRIO',
+		'avancado'      => 'AVANÇADO',
+		'infantil'      => 'INFANTIL',
+	);
+}
+
+/**
+ * Encontra a opção correspondente a um texto ("Forró", "FORRÓ", "forro"...).
+ * Usado para reconhecer turmas antigas, em que o campo era texto livre.
+ */
+function dija_option_key( string $text, array $options ): string {
+	$slug = sanitize_title( remove_accents( trim( $text ) ) );
+	if ( '' === $slug ) {
+		return '';
+	}
+	foreach ( $options as $key => $label ) {
+		if ( $slug === $key || $slug === sanitize_title( remove_accents( $label ) ) ) {
+			return (string) $key;
+		}
+	}
+	return '';
+}
+
+/** Chaves de ritmo salvas ("samba,forro"), na ordem da lista. Vazio se houver valor fora da lista. */
+function dija_ritmo_keys( string $raw ): array {
+	if ( '' === trim( $raw ) ) {
+		return array();
+	}
+	$keys = array();
+	foreach ( preg_split( '/\s*,\s*/', trim( $raw ) ) as $part ) {
+		$key = dija_option_key( $part, dija_ritmos() );
+		if ( '' === $key ) {
+			return array(); // valor antigo, fora da lista
+		}
+		$keys[] = $key;
+	}
+	return array_values( array_intersect( array_keys( dija_ritmos() ), $keys ) );
+}
+
+/** "A", "A e B", "A, B e C". */
+function dija_join_e( array $items ): string {
+	$items = array_values( array_filter( $items, 'strlen' ) );
+	$last  = array_pop( $items );
+	return $items ? implode( ', ', $items ) . ' e ' . $last : (string) $last;
+}
+
+/** Ritmos da turma para exibir: "SAMBA e FORRÓ" (ou o texto antigo, se fora da lista). */
+function dija_turma_ritmo( int $post_id ): string {
+	$raw  = (string) get_post_meta( $post_id, 'dija_ritmo', true );
+	$keys = dija_ritmo_keys( $raw );
+	return $keys ? dija_join_e( array_map( fn( $k ) => dija_ritmos()[ $k ], $keys ) ) : $raw;
+}
+
+/** Nível da turma para exibir (ou o texto antigo, se fora da lista). */
+function dija_turma_nivel( int $post_id ): string {
+	$raw = (string) get_post_meta( $post_id, 'dija_nivel', true );
+	$key = dija_option_key( $raw, dija_niveis() );
+	return $key ? dija_niveis()[ $key ] : $raw;
+}
+
 /**
  * Campos de cada tipo.
  * type: text | textarea | select | url ; max: limite de caracteres sugerido.
@@ -77,8 +158,8 @@ function dija_fields( string $post_type ): array {
 			'status'  => array( 'label' => 'Situação', 'type' => 'select', 'options' => dija_turma_status(), 'default' => 'andamento', 'help' => '“Em andamento” aparece na página inicial e na primeira parte de /turmas. “Próxima turma” aparece em “Próximas turmas”, com a imagem de divulgação.' ),
 			'dia'     => array( 'label' => 'Dia da semana', 'type' => 'select', 'options' => dija_weekdays(), 'default' => 'seg' ),
 			'horario' => array( 'label' => 'Horário', 'type' => 'text', 'max' => 16, 'placeholder' => '19h às 20h', 'help' => 'Comece pela hora de início: as turmas do mesmo dia são ordenadas por ela.' ),
-			'ritmo'   => array( 'label' => 'Ritmo / estilo de dança', 'type' => 'text', 'max' => 16, 'placeholder' => 'FORRÓ' ),
-			'nivel'   => array( 'label' => 'Nível', 'type' => 'text', 'max' => 16, 'placeholder' => 'INICIANTE' ),
+			'ritmo'   => array( 'label' => 'Ritmo / estilo de dança', 'type' => 'checkboxes', 'options' => dija_ritmos(), 'help' => 'Marque um ou mais. No site, aparecem juntos: “SAMBA e FORRÓ”.' ),
+			'nivel'   => array( 'label' => 'Nível', 'type' => 'select', 'options' => dija_niveis(), 'choose' => 'Selecione o nível' ),
 			'inicio'  => array( 'label' => 'Início (só próximas turmas)', 'type' => 'text', 'max' => 24, 'placeholder' => 'Início em 05/01', 'help' => 'Opcional.' ),
 			'cor'     => array( 'label' => 'Cor do card', 'type' => 'select', 'options' => dija_turma_colors(), 'default' => 'red' ),
 			'icone'   => array( 'label' => 'Ícone', 'type' => 'select', 'options' => dija_turma_icons(), 'default' => 'sun' ),
@@ -107,10 +188,22 @@ function dija_field( int $post_id, string $key ): string {
 	if ( 'dia' === $key && '' !== $value ) {
 		$value = dija_weekday_key( $value ) ?: $value; // turmas antigas: dia em texto livre
 	}
+	if ( 'turma' === $post_type && 'ritmo' === $key && '' !== $value ) {
+		$value = implode( ',', dija_ritmo_keys( $value ) ) ?: $value; // turmas antigas: texto livre
+	}
+	if ( 'turma' === $post_type && 'nivel' === $key && '' !== $value ) {
+		$value = dija_option_key( $value, dija_niveis() ) ?: $value;
+	}
 	return '' !== $value ? $value : (string) ( $def['default'] ?? '' );
 }
 
 function dija_sanitize_field( array $def, $raw ): string {
+	if ( 'checkboxes' === $def['type'] ) {
+		// Formulário envia lista; REST pode enviar "samba,forro".
+		$list = is_array( $raw ) ? wp_unslash( $raw ) : explode( ',', (string) $raw );
+		$keys = array_map( fn( $v ) => sanitize_key( (string) $v ), $list );
+		return implode( ',', array_values( array_intersect( array_keys( $def['options'] ), $keys ) ) );
+	}
 	$raw = is_string( $raw ) ? wp_unslash( $raw ) : '';
 	switch ( $def['type'] ) {
 		case 'textarea':
@@ -360,8 +453,21 @@ function dija_render_fields_box( WP_Post $post ): void {
 			case 'textarea':
 				echo '<textarea class="large-text" rows="3" id="' . esc_attr( $id ) . '" name="dija_fields[' . esc_attr( $key ) . ']"' . $max . $ph . '>' . esc_textarea( $value ) . '</textarea>';
 				break;
+			case 'checkboxes':
+				$checked = '' === $value ? array() : explode( ',', $value );
+				// Campo vazio garante que desmarcar tudo também seja salvo.
+				echo '<input type="hidden" name="dija_fields[' . esc_attr( $key ) . '][]" value="">';
+				echo '<fieldset id="' . esc_attr( $id ) . '" style="display:flex;flex-wrap:wrap;gap:6px 22px;max-width:720px"><legend class="screen-reader-text">' . esc_html( $def['label'] ) . '</legend>';
+				foreach ( $def['options'] as $opt => $label ) {
+					echo '<label style="min-width:200px"><input type="checkbox" name="dija_fields[' . esc_attr( $key ) . '][]" value="' . esc_attr( $opt ) . '"' . checked( in_array( $opt, $checked, true ), true, false ) . '> ' . esc_html( $label ) . '</label>';
+				}
+				echo '</fieldset>';
+				break;
 			case 'select':
-				echo '<select id="' . esc_attr( $id ) . '" name="dija_fields[' . esc_attr( $key ) . ']">';
+				echo '<select id="' . esc_attr( $id ) . '" name="dija_fields[' . esc_attr( $key ) . ']"' . ( isset( $def['choose'] ) ? ' required' : '' ) . '>';
+				if ( isset( $def['choose'] ) ) {
+					echo '<option value=""' . selected( array_key_exists( $value, $def['options'] ), false, false ) . '>' . esc_html( $def['choose'] ) . '</option>';
+				}
 				foreach ( $def['options'] as $opt => $label ) {
 					echo '<option value="' . esc_attr( $opt ) . '"' . selected( $value, $opt, false ) . '>' . esc_html( $label ) . '</option>';
 				}
@@ -372,6 +478,11 @@ function dija_render_fields_box( WP_Post $post ): void {
 				break;
 			default:
 				echo '<input type="text" class="regular-text" id="' . esc_attr( $id ) . '" name="dija_fields[' . esc_attr( $key ) . ']" value="' . esc_attr( $value ) . '"' . $max . $ph . '>';
+		}
+		// Valor digitado antes das listas e que não corresponde a nenhuma opção.
+		$stored = (string) get_post_meta( $post->ID, 'dija_' . $key, true );
+		if ( isset( $def['options'] ) && '' !== $stored && ( 'checkboxes' === $def['type'] ? ! dija_ritmo_keys( $stored ) : ! array_key_exists( $value, $def['options'] ) ) ) {
+			echo '<p class="description" style="color:#b32d2e"><strong>Valor antigo: “' . esc_html( $stored ) . '”.</strong> Ele continua aparecendo no site até você escolher uma opção da lista e atualizar.</p>';
 		}
 		if ( isset( $def['max'] ) ) {
 			echo '<p class="description">' . esc_html( ( $def['help'] ?? '' ) . ' Até ' . (int) $def['max'] . ' caracteres.' ) . '</p>';
@@ -418,8 +529,14 @@ add_filter( 'wp_insert_post_data', function ( array $data, array $postarr ) {
 	if ( ! dija_fields_request_is_valid( (int) ( $postarr['ID'] ?? 0 ) ) ) {
 		return $data;
 	}
-	$f     = array_map( fn( $v ) => sanitize_text_field( wp_unslash( (string) $v ) ), $_POST['dija_fields'] );
-	$parts = array_filter( array( dija_weekday_label( $f['dia'] ?? '' ), $f['horario'] ?? '', trim( ( $f['ritmo'] ?? '' ) . ' ' . ( $f['nivel'] ?? '' ) ) ) );
+	$defs   = dija_fields( 'turma' );
+	$input  = $_POST['dija_fields']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- sanitizado abaixo.
+	$dia    = dija_sanitize_field( $defs['dia'], $input['dia'] ?? '' );
+	$hora   = dija_sanitize_field( $defs['horario'], $input['horario'] ?? '' );
+	$ritmos = dija_ritmo_keys( dija_sanitize_field( $defs['ritmo'], $input['ritmo'] ?? array() ) );
+	$nivel  = dija_sanitize_field( $defs['nivel'], $input['nivel'] ?? '' );
+	$ritmo  = dija_join_e( array_map( fn( $k ) => dija_ritmos()[ $k ], $ritmos ) );
+	$parts  = array_filter( array( dija_weekday_label( $dia ), $hora, trim( $ritmo . ' ' . ( dija_niveis()[ $nivel ] ?? '' ) ) ) );
 	if ( $parts ) {
 		$data['post_title'] = implode( ' · ', $parts );
 	}

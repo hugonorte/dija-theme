@@ -171,8 +171,8 @@ Menu **Turmas → Adicionar turma**:
 | Situação | Em andamento / Próxima turma | Define a seção da página `/turmas`. Só “Em andamento” aparece na página inicial |
 | Dia da semana | Segunda | Lista de Segunda a Domingo |
 | Horário | 19h às 20h | Comece pela hora de início: turmas do mesmo dia são ordenadas por ela |
-| Ritmo / estilo de dança | FORRÓ | Até 16 caracteres |
-| Nível | INICIANTE | Até 16 caracteres |
+| Ritmo / estilo de dança | ☑ SAMBA ☑ FORRÓ | Marque **um ou mais**: Samba, Forró, Dança de Salão, Soltinho, Zouk, Bolero, Carimbó, Tango, Kizomba, Sertanejo Universitário, Bachata. No site aparecem juntos, com “e”: “SAMBA e FORRÓ”, “SAMBA, FORRÓ e ZOUK” |
+| Nível | INICIANTE | Escolha um: Iniciante, Intermediário, Avançado ou Infantil |
 | Início (só próximas turmas) | Início em 05/01 | Opcional. Aparece em destaque no card |
 | Cor do card | Vermelho, Verde-azulado, Roxo ou Amarelo-ocre | |
 | Ícone | Sol claro, Lua com estrelas, Estrela ou Sol escuro | |
@@ -188,7 +188,14 @@ Na lateral da tela:
 - **Atributos → Ordem:** desempate entre turmas do mesmo dia e horário.
 
 Clique em **Publicar**. O título da turma no painel é criado sozinho a
-partir dos campos (ex.: “SEGUNDA · 19h às 20h · FORRÓ INICIANTE”).
+partir dos campos (ex.: “SEGUNDA · 19h às 20h · SAMBA e FORRÓ INICIANTE”).
+
+> **Turmas cadastradas antes das listas:** ritmos e níveis que eram digitados
+> (ex.: “FORRÓ”, “INICIANTE”) são reconhecidos sozinhos. Se um valor antigo
+> não existir nas listas (ex.: “XOTE”), ele continua aparecendo no site e a
+> tela da turma mostra um aviso em vermelho; escolha uma opção da lista e
+> clique em **Atualizar**. Para incluir um ritmo ou nível novo nas listas,
+> peça ao desenvolvedor (ver seção 3.4).
 
 #### Atualizar, mudar de situação ou remover
 
@@ -361,8 +368,10 @@ A página `/contato` mostra só esta seção e precisa ter o endereço (slug)
   Elas usam o layout padrão de texto do site.
 - **Nome do site** (aba do navegador e Google): **Configurações → Geral →
   Título do site**.
-- **Ícone da aba do navegador:** **Aparência → Personalizar → Identidade do
-  site → Ícone do site** (imagem quadrada, mínimo 512×512 px).
+- **Ícone da aba do navegador:** o site já vem com o ícone do coração. Para
+  trocar, use **Aparência → Personalizar → Identidade do site → Ícone do site**
+  (imagem quadrada, mínimo 512×512 px); ele passa a valer no lugar do ícone do
+  tema. Para voltar ao coração, remova a imagem desse campo.
 
 ---
 
@@ -624,7 +633,7 @@ o conteúdo “sumir” do site**, embora ele continue no banco:
 | Proteção do formulário | opção `dija_blocked_ips` (bloqueios com expiração), transients `dija_rate_*`, campos `hp_campo_vazio` e `form_ts` (carimbo assinado) | `inc/form-security.php` |
 | Galeria de fotos | tipo `foto` (meta `dija_data` = AAAA-MM; imagem destacada = foto); taxonomias `foto_evento` (opção única) e `foto_tag`; filtros na URL `foto-ano`, `foto-evento`, `foto-tag`, `fotos-pagina` | `inc/gallery.php` |
 | Locais (taxonomia) | `local`, com os campos `dija_endereco` e `dija_ordem` (term meta) | `register_taxonomy()` em `inc/content-types.php` |
-| Valores das listas | situação `andamento`/`proxima`; dias `seg`…`dom`; cores `red`/`teal`/`purple`/`ochre`; ícones `sun`/`moon`/`star-big`/`sun2` | `dija_turma_status()`, `dija_weekdays()`, `dija_turma_colors()`, `dija_turma_icons()` |
+| Valores das listas | situação `andamento`/`proxima`; dias `seg`…`dom`; ritmos (`dija_ritmo` = chaves separadas por vírgula, ex. `samba,forro`) e níveis em `dija_ritmos()` / `dija_niveis()`; cores `red`/`teal`/`purple`/`ochre`; ícones `sun`/`moon`/`star-big`/`sun2` | `dija_turma_status()`, `dija_weekdays()`, `dija_turma_colors()`, `dija_turma_icons()` |
 | Textos do Personalizador | `dija_*` (ex.: `dija_hero_name_1`) | `inc/customizer.php`, `dija_defaults()` |
 | Endereços | `/turmas`, `/eventos`; páginas com slug `bio` e `contato` | `rewrite` dos tipos; `page-bio.php`, `page-contato.php` |
 | API do formulário | `POST /wp-json/dija/v1/contact` | `inc/contact.php` |
