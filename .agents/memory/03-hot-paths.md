@@ -17,6 +17,7 @@ source: Extracted from memory system for .agents/memory/
 - `wp-theme/inc/form-security.php` — honeypot (72 h form-only temp block, option dija_blocked_ips), signed time trap (form_ts, ≥3 s), rate limit 5/h; client IP = REMOTE_ADDR unless DIJA_TRUSTED_IP_HEADER.
 - `wp-theme/inc/content-types.php` — CPT and meta registration (changing meta keys orphans saved data).
 - `docker-compose.yml` — versions pinned to production.
+- Favicon: `wp-theme/assets/icon.svg` (cleaned from design-systems/.../icon.svg), `favicon.ico` and `apple-touch-icon.png` generated from it; tags in `dija_favicon_tags()` (setup.php), skipped when a Site Icon is set.
 
 ## Impact Zones (Changes Break Multiple Places)
 - CSS tokens and masks at the top of `styles.css` (`--u`, `--tear`, `--mask-*`, `--icon-*`).
