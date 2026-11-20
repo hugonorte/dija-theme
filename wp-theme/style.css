@@ -12,4 +12,14 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dija-theme
 */
 
-/* Os estilos do site ficam em assets/styles.css (carregado por functions.php). */
+/*
+ * Licenciamento (ver LICENSE e COPYING na raiz do repositório
+ * https://github.com/hugonorte/dija-theme):
+ * - Código PHP e JavaScript: GNU GPL v2 ou posterior, com manutenção dos
+ *   avisos de autoria (Copyright (c) 2026 Hugo Norte).
+ * - Layout, CSS (assets/styles.css), imagens e ícones: Copyright (c) 2026
+ *   Hugo Norte. Todos os direitos reservados. Cópia proibida
+ *   (Lei nº 9.610/1998).
+ *
+ * Os estilos do site ficam em assets/styles.css (carregado por functions.php).
+ */
