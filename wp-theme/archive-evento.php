@@ -1,6 +1,6 @@
 <?php
 /**
- * Página /eventos: lista de todos os eventos + contato.
+ * Página /eventos: lista de todos os eventos + galeria de fotos + contato.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,8 @@ get_header();
 						<?php if ( $dija_desc ) : ?>
 							<p class="t1"><?php echo nl2br( esc_html( $dija_desc ) ); ?></p>
 						<?php endif; ?>
-						<a class="btn3 brush" href="<?php echo esc_url( dija_link( dija_field( get_the_ID(), 'botao_link' ) ) ); ?>"><?php echo esc_html( dija_field( get_the_ID(), 'botao_texto' ) ); ?></a>
+						<?php // Nesta página, o botão abre o WhatsApp citando o evento (mensagem no Personalizador). ?>
+						<a class="btn3 brush" href="<?php echo dija_esc_link( dija_evento_whatsapp_url( get_post() ) ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( dija_field( get_the_ID(), 'botao_texto' ) . ': ' . get_the_title() . ' (abre o WhatsApp)' ); ?>"><?php echo esc_html( dija_field( get_the_ID(), 'botao_texto' ) ); ?></a>
 					</div>
 				</article>
 			<?php endwhile; ?>
@@ -36,5 +37,6 @@ get_header();
 	<?php endif; ?>
 </section>
 <?php
+get_template_part( 'template-parts/section-fotos' );
 get_template_part( 'template-parts/section-contato' );
 get_footer();

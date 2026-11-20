@@ -13,7 +13,8 @@ source: Extracted from memory system for .agents/memory/
 - `wp-theme/inc/helpers.php` — default texts (`dija_defaults()`).
 
 ## Stable Core (Rarely Change)
-- `wp-theme/inc/contact.php` — contact REST endpoint, spam protection, SMTP.
+- `wp-theme/inc/contact.php` — contact REST endpoint, e-mail notification (contato@dija.com.br), SMTP.
+- `wp-theme/inc/form-security.php` — honeypot (72 h form-only temp block, option dija_blocked_ips), signed time trap (form_ts, ≥3 s), rate limit 5/h; client IP = REMOTE_ADDR unless DIJA_TRUSTED_IP_HEADER.
 - `wp-theme/inc/content-types.php` — CPT and meta registration (changing meta keys orphans saved data).
 - `docker-compose.yml` — versions pinned to production.
 

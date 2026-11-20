@@ -3,8 +3,9 @@
  * Formulário de contato: endpoint REST, mensagens no painel e envio por SMTP.
  *
  * Portado do tema anterior (Nuxt) sem mudanças de comportamento:
- * POST /wp-json/dija/v1/contact  {name, email, whatsapp, message, fax_number}
- * - "fax_number" é o campo-armadilha (honeypot) contra robôs.
+ * POST /wp-json/dija/v1/contact  {name, email, whatsapp, message, hp_campo_vazio, form_ts}
+ * - Proteção contra robôs (honeypot, tempo, limite, bloqueio temporário):
+ *   inc/form-security.php.
  * - Cada mensagem vira um item em "Contatos" no painel, com resposta por e-mail.
  */
 
@@ -200,85 +201,100 @@ add_action( 'rest_api_init', function () {
 } );
 
 function dija_handle_contact_submission( WP_REST_Request $request ) {
-    $params = $request->get_json_params();
-    $name = sanitize_text_field($params['name'] ?? '');
-    $email = sanitize_email($params['email'] ?? '');
-    $whatsapp = sanitize_text_field($params['whatsapp'] ?? '');
-    $message = sanitize_textarea_field($params['message'] ?? '');
-    $honeypot = $params['fax_number'] ?? '';
-    $ip = dija_get_client_ip();
+    $params   = (array) $request->get_json_params();
+    $name     = sanitize_text_field( $params['name'] ?? '' );
+    $email    = sanitize_email( $params['email'] ?? '' );
+    $whatsapp = sanitize_text_field( $params['whatsapp'] ?? '' );
+    $message  = sanitize_textarea_field( $params['message'] ?? '' );
+    // Campo-armadilha (honeypot): invisível para pessoas, robôs costumam preencher.
+    // "fax_number" é o nome antigo, aceito por compatibilidade.
+    $honeypot = trim( (string) ( $params['hp_campo_vazio'] ?? '' ) . (string) ( $params['fax_number'] ?? '' ) );
+    $stamp    = (string) ( $params['form_ts'] ?? '' );
+    $ip       = dija_get_client_ip();
+    // Resposta usada para robôs: parece sucesso, para que não tentem de novo.
+    $silent   = new WP_REST_Response( array( 'message' => 'Recebido!' ), 200 );
 
-    // 1. Verificar se o IP já está na lista negra nativa do WP
-    if (dija_is_ip_disallowed($ip)) {
-        error_log("BLOCK: Tentativa de envio de IP já banido: $ip");
-        return new WP_REST_Response(array('message' => 'Recebido!'), 200);
+    // 1. IP bloqueado temporariamente (caiu no honeypot há pouco).
+    if ( dija_is_ip_blocked( $ip ) ) {
+        error_log( "CONTATO: envio ignorado, IP bloqueado: $ip" );
+        return $silent;
     }
 
-    // 2. Lógica Honeypot: Se preenchido, é robô. Adicionamos o IP à lista negra.
-    if (!empty($honeypot)) {
-        dija_add_ip_to_disallowed_list($ip);
-        error_log("HONEYPOT & BAN: Spam detectado. IP $ip adicionado à lista negra.");
-        return new WP_REST_Response(array('message' => 'Recebido!'), 200);
+    // 2. Honeypot preenchido: robô. Bloqueia o IP (só o formulário, por tempo limitado).
+    if ( '' !== $honeypot ) {
+        dija_block_ip( $ip, 'honeypot' );
+        error_log( "CONTATO: honeypot preenchido; IP $ip bloqueado por " . round( dija_block_ttl() / HOUR_IN_SECONDS ) . ' h.' );
+        return $silent;
     }
 
-    if (empty($name) || empty($email) || empty($message)) {
-        return new WP_Error('missing', 'Campos obrigatórios ausentes.', array('status' => 400));
+    // 3. Armadilha de tempo: rápido demais ou sem o carimbo do formulário.
+    if ( ! dija_form_timestamp_ok( $stamp ) ) {
+        error_log( "CONTATO: envio descartado (enviado rápido demais ou sem carimbo do formulário). IP $ip" );
+        return $silent;
     }
 
-    $post_id = wp_insert_post(array(
-        'post_title' => "Mensagem de: " . $name,
+    if ( empty( $name ) || empty( $email ) || empty( $message ) ) {
+        return new WP_Error( 'missing', 'Campos obrigatórios ausentes.', array( 'status' => 400 ) );
+    }
+
+    // 4. Limite de envios por IP (protege a caixa de e-mail contra inundação).
+    if ( dija_rate_limited( $ip ) ) {
+        return new WP_Error( 'rate_limited', 'Muitas mensagens em pouco tempo. Tente de novo mais tarde ou fale pelo WhatsApp.', array( 'status' => 429 ) );
+    }
+
+    $post_id = wp_insert_post( array(
+        'post_title'   => 'Mensagem de: ' . $name,
         'post_content' => "De: $name <$email>\nWhatsApp: $whatsapp\n\n" . $message,
-        'post_status' => 'publish',
-        'post_type' => 'contact_message',
-    ));
+        'post_status'  => 'publish',
+        'post_type'    => 'contact_message',
+    ) );
 
-    update_post_meta($post_id, '_contact_email', $email);
-    update_post_meta($post_id, '_contact_whatsapp', $whatsapp);
+    update_post_meta( $post_id, '_contact_email', $email );
+    update_post_meta( $post_id, '_contact_whatsapp', $whatsapp );
 
-    return new WP_REST_Response(array('message' => 'Recebido!'), 200);
+    // Envio legítimo: avisa por e-mail (a mensagem já está salva em "Contatos",
+    // então uma falha no e-mail não perde o contato).
+    dija_notify_contact_message( (int) $post_id, $name, $email, $whatsapp, $message );
+
+    return new WP_REST_Response( array( 'message' => 'Recebido!' ), 200 );
 }
 
 /**
- * Funções Auxiliares de Segurança
+ * Envia a mensagem recebida para o e-mail do Personalizador
+ * (padrão: contato@dija.com.br). "Responder" no programa de e-mail vai
+ * direto para quem escreveu (Reply-To).
  */
+function dija_notify_contact_message( int $post_id, string $name, string $email, string $whatsapp, string $message ): bool {
+    $to = sanitize_email( (string) dija_mod( 'contato_email' ) ) ?: 'contato@dija.com.br';
 
-// Pega o IP real do cliente
-function dija_get_client_ip() {
-    foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
-        if (array_key_exists($key, $_SERVER) === true) {
-            foreach (explode(',', $_SERVER[$key]) as $ip) {
-                $ip = trim($ip);
-                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
-                    return $ip;
-                }
-            }
-        }
+    // Nome sem caracteres que quebrariam o cabeçalho do e-mail.
+    $safe_name = trim( preg_replace( '/[\r\n<>",;]+/', ' ', $name ) );
+    $subject   = sprintf( '[Site] Nova mensagem de %s', $safe_name );
+    $body      = implode( "\n", array(
+        'Nova mensagem enviada pelo formulário do site.',
+        '',
+        'Nome: ' . $name,
+        'E-mail: ' . $email,
+        'WhatsApp: ' . ( $whatsapp ?: '—' ),
+        '',
+        'Mensagem:',
+        $message,
+        '',
+        '—',
+        'Ver no painel: ' . admin_url( 'post.php?post=' . $post_id . '&action=edit' ),
+    ) );
+    $headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+    if ( is_email( $email ) ) {
+        $headers[] = sprintf( 'Reply-To: %s <%s>', $safe_name, $email );
     }
-    return $_SERVER['REMOTE_ADDR'];
-}
 
-// Verifica se o IP está na lista de banidos do WordPress (Settings > Discussion)
-function dija_is_ip_disallowed($ip) {
-    $list = get_option('disallowed_keys');
-    if (empty($list)) return false;
-    
-    $words = explode("\n", $list);
-    foreach ($words as $word) {
-        $word = trim($word);
-        if (!empty($word) && strpos($ip, $word) !== false) {
-            return true;
-        }
+    $sent = wp_mail( $to, $subject, $body, $headers );
+    if ( $sent ) {
+        update_post_meta( $post_id, '_notified_at', current_time( 'mysql' ) );
+    } else {
+        error_log( "CONTATO: falha ao enviar o aviso da mensagem $post_id para $to (a mensagem está salva no painel)." );
     }
-    return false;
+    return $sent;
 }
 
-// Adiciona um IP à lista de banidos automaticamente
-function dija_add_ip_to_disallowed_list($ip) {
-    $list = get_option('disallowed_keys');
-    
-    // Se o IP já está lá, não faz nada
-    if (strpos($list, $ip) !== false) return;
-
-    $list .= "\n" . $ip;
-    update_option('disallowed_keys', trim($list));
-}
+// Proteções do formulário (IP, honeypot, tempo, limite): inc/form-security.php

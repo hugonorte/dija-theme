@@ -33,8 +33,11 @@ design-systems/            # Approved static HTML prototype (visual reference, n
 ```
 
 ## Content Model
-- `turma`: dija_dia, dija_horario, dija_ritmo, dija_nivel, dija_descricao, dija_cor, dija_icone, menu_order
+- `turma`: dija_status (andamento|proxima), dija_dia (seg…dom; legacy free text normalized by dija_weekday_key), dija_horario, dija_ritmo, dija_nivel, dija_inicio, dija_cor, dija_icone, featured image (16:9 promo), menu_order
+- `local` taxonomy on turma (single choice via custom radio box): term meta dija_endereco, dija_ordem
+- /turmas (archive-turma.php): ongoing + upcoming sections grouped local → weekday (dija_group_turmas); promo carousel = upcoming turmas with featured image
 - `evento`: title, dija_descricao, dija_botao_texto, dija_botao_link, featured image, menu_order
+- `foto` (inc/gallery.php, submenu of Eventos): featured image = photo, dija_data (YYYY-MM, sort DESC); taxonomies foto_evento (single choice) and foto_tag; /eventos 'Fotos' section filters via GET foto-ano / foto-evento / foto-tag / fotos-pagina (24 per page)
 - Customizer settings `dija_*` for single texts/photos (defaults in `dija_defaults()`)
 
 ## Patterns

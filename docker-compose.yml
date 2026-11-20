@@ -13,9 +13,19 @@ services:
     ports:
       - "3306:3306"
 
+  # Ajusta o dono do volume de uploads para o usuário do Apache (www-data, uid 33).
+  # Sem isto, o volume nasce com dono root e o WordPress não consegue salvar imagens.
+  uploads-perms:
+    image: busybox:1.37
+    command: chown -R 33:33 /uploads
+    volumes:
+      - wp_uploads:/uploads
+    restart: "no"
+
   wordpress:
     depends_on:
       - db
+      - uploads-perms
     # Versão exata: `docker compose pull` não troca o WordPress/PHP sem aviso.
     # Igual à produção (Hostinger): WordPress 7.1.5 + PHP 8.5. Ao atualizar lá, mude aqui.
     image: wordpress:7.1.5-php8.5-apache

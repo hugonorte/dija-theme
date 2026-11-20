@@ -24,17 +24,28 @@ function dija_defaults(): array {
 		'hero_badge'         => 'PROFESSORA DE DANÇA DE SALÃO',
 		'hero_tagline'       => "Venha dançar com\na gente e ser feliz",
 		'hero_cta_label'     => 'QUERO DANÇAR!',
-		'hero_cta_url'       => '/contato/',
+		'hero_cta_url'       => '/turmas/',
 		'hero_photo'         => 0,
 
 		// Turmas
 		'turmas_kicker'      => 'NOSSAS',
 		'turmas_title'       => 'TURMAS',
 		'turmas_page_intro'  => 'Escolha o estilo e o horário que melhor se encaixam na sua rotina e venha dançar com a gente.',
+		'turmas_now_title'   => 'TURMAS EM ANDAMENTO',
+		'turmas_now_empty'   => 'Novas turmas em breve. Fale com a gente pelo contato!',
+		'turmas_next_title'  => 'PRÓXIMAS TURMAS',
+		'turmas_next_intro'  => 'Garanta sua vaga nas turmas que vão começar.',
+		'turmas_next_empty'  => 'Nenhuma turma nova agendada no momento. Siga o Instagram para saber das próximas!',
+		'turmas_cta_label'   => 'QUERO PARTICIPAR',
+		'turmas_wa_message'  => "Olá, Dija! Quero participar da turma de {turma}.\nLocal: {local}\nDia: {dia}\nHorário: {horario}",
 
 		// Eventos
 		'eventos_title'      => 'EVENTOS',
 		'eventos_page_intro' => 'Transforme o seu evento em uma experiência única: apresentações culturais, festivais, aniversários, casamentos, eventos corporativos e muito mais.',
+		'eventos_wa_message' => "Olá, Dija! Tenho interesse em saber mais sobre eventos: {evento}",
+		'fotos_title'        => 'FOTOS',
+		'fotos_intro'        => 'Aqui você confere momentos dos eventos de que participamos: apresentações, festivais, casamentos e muito mais. Use os filtros para encontrar as fotos por ano, evento ou tema.',
+		'fotos_empty'        => 'Nenhuma foto encontrada com esses filtros.',
 
 		// Sobre
 		'sobre_kicker'       => 'SOBRE A',
@@ -43,12 +54,15 @@ function dija_defaults(): array {
 		'sobre_highlight'    => "AQUI, VOCÊ NÃO APRENDE\nAPENAS A DANÇAR.",
 		'sobre_accent'       => 'VOCÊ VIVE A CULTURA!',
 		'sobre_photo'        => 0,
+		'sobre_cta_label'    => 'SAIBA MAIS',
+		'sobre_cta_url'      => '/bio/',
 
 		// Contato
 		'contato_title'      => 'CONTATO',
 		'contato_text'       => "TIRE SUAS DÚVIDAS,\nFAÇA SUA MATRÍCULA OU\nCONTRATE PARA SEU EVENTO!",
 		'contato_button'     => 'VAMOS DANÇAR!',
 		'contato_success'    => 'Mensagem enviada! Em breve entraremos em contato.',
+		'contato_email'      => 'contato@dija.com.br',
 	);
 }
 
@@ -110,8 +124,8 @@ function dija_photo( int $attachment_id, string $default_base, string $default_f
 	);
 }
 
-/** Link do WhatsApp a partir do número digitado (assume Brasil, DDI 55). */
-function dija_whatsapp_url(): string {
+/** Link do WhatsApp a partir do número digitado (assume Brasil, DDI 55), com mensagem opcional (?text=). */
+function dija_whatsapp_url( string $message = '' ): string {
 	$digits = preg_replace( '/\D+/', '', (string) dija_mod( 'whatsapp' ) );
 	if ( '' === $digits ) {
 		return '';
@@ -119,7 +133,45 @@ function dija_whatsapp_url(): string {
 	if ( strlen( $digits ) <= 11 ) {
 		$digits = '55' . $digits;
 	}
-	return 'https://wa.me/' . $digits;
+	$url = 'https://wa.me/' . $digits;
+	return '' === $message ? $url : $url . '?text=' . rawurlencode( $message );
+}
+
+/**
+ * Link do botão "Quero participar" de uma turma: WhatsApp com a mensagem do
+ * Personalizador, preenchendo {turma}, {local}, {endereco}, {dia}, {horario}
+ * e {inicio}. Sem WhatsApp cadastrado, leva à página de contato.
+ */
+function dija_turma_whatsapp_url( WP_Post $turma, string $local, string $address = '' ): string {
+	$replace = array(
+		'{turma}'    => trim( dija_field( $turma->ID, 'ritmo' ) . ' ' . dija_field( $turma->ID, 'nivel' ) ),
+		'{local}'    => $local,
+		'{endereco}' => preg_replace( '/\s+/', ' ', $address ),
+		'{dia}'      => dija_weekday_label( dija_field( $turma->ID, 'dia' ) ),
+		'{horario}'  => dija_field( $turma->ID, 'horario' ),
+		'{inicio}'   => dija_field( $turma->ID, 'inicio' ),
+	);
+	$message = trim( strtr( (string) dija_mod( 'turmas_wa_message' ), $replace ) );
+	return dija_whatsapp_url( $message ) ?: dija_link( dija_mod( 'nav_cta_url' ) );
+}
+
+/** Link do botão "Saiba mais" na página /eventos: WhatsApp citando o evento. */
+function dija_evento_whatsapp_url( WP_Post $evento ): string {
+	$message = trim( strtr( (string) dija_mod( 'eventos_wa_message' ), array( '{evento}' => get_the_title( $evento ) ) ) );
+	return dija_whatsapp_url( $message ) ?: dija_link( dija_mod( 'nav_cta_url' ) );
+}
+
+/**
+ * Escapa um link para atributo href preservando as quebras de linha (%0A) da
+ * mensagem do WhatsApp — esc_url() as removeria. Só links wa.me montados pelo
+ * próprio tema (número só com dígitos, texto via rawurlencode) recebem esse
+ * tratamento; qualquer outro passa por esc_url().
+ */
+function dija_esc_link( string $url ): string {
+	if ( preg_match( '#^https://wa\.me/\d+(\?text=[A-Za-z0-9%._~-]*)?$#', $url ) ) {
+		return esc_attr( $url );
+	}
+	return esc_url( $url );
 }
 
 /** Link do Instagram a partir do @usuário (ou URL completa). */

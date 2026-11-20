@@ -39,10 +39,12 @@ $dija_whatsapp  = dija_whatsapp_url();
 		<input class="in" id="f-email" name="email" type="email" placeholder="E-MAIL" autocomplete="email" required>
 		<label class="sr-only" for="f-msg">Mensagem</label>
 		<textarea class="in" id="f-msg" name="message" placeholder="SUA MENSAGEM" required></textarea>
+		<?php // Campo-armadilha (honeypot): escondido de pessoas e de leitores de tela; robôs o preenchem e o envio é descartado. ?>
 		<div class="form-hp" aria-hidden="true">
-			<label for="f-fax">Não preencha</label>
-			<input id="f-fax" name="fax_number" type="text" tabindex="-1" autocomplete="off">
+			<label for="f-hp">Deixe este campo em branco</label>
+			<input id="f-hp" name="hp_campo_vazio" type="text" value="" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore data-bwignore>
 		</div>
+		<input type="hidden" name="form_ts" value="<?php echo esc_attr( dija_form_timestamp() ); ?>">
 		<button class="btn5 brush" type="submit"><?php echo esc_html( dija_mod( 'contato_button' ) ); ?><span class="ico ico-heart2" aria-hidden="true"></span></button>
 		<p class="form-status" role="status" aria-live="polite"></p>
 	</form>

@@ -40,15 +40,26 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 		array( 'hero_badge', 'dija_hero', 'Faixa roxa', 'text', 'Até ~32 caracteres.' ),
 		array( 'hero_tagline', 'dija_hero', 'Frase', 'textarea', 'Cada linha do campo vira uma linha no site.' ),
 		array( 'hero_cta_label', 'dija_hero', 'Botão — texto', 'text', '' ),
-		array( 'hero_cta_url', 'dija_hero', 'Botão — link', 'link', 'Ex.: /contato/' ),
+		array( 'hero_cta_url', 'dija_hero', 'Botão — link', 'link', 'Padrão: /turmas/' ),
 		array( 'hero_photo', 'dija_hero', 'Foto', 'image', 'PNG ou AVIF com fundo transparente, retrato (aprox. 3:4).' ),
 
 		array( 'turmas_kicker', 'dija_turmas', 'Título pequeno', 'text', '' ),
 		array( 'turmas_title', 'dija_turmas', 'Título grande', 'text', '' ),
 		array( 'turmas_page_intro', 'dija_turmas', 'Texto de abertura da página /turmas', 'textarea', '' ),
+		array( 'turmas_now_title', 'dija_turmas', 'Página /turmas — título “em andamento”', 'text', '' ),
+		array( 'turmas_now_empty', 'dija_turmas', 'Página /turmas — aviso sem turmas em andamento', 'text', '' ),
+		array( 'turmas_next_title', 'dija_turmas', 'Página /turmas — título “próximas turmas”', 'text', '' ),
+		array( 'turmas_next_intro', 'dija_turmas', 'Página /turmas — texto das próximas turmas', 'textarea', '' ),
+		array( 'turmas_next_empty', 'dija_turmas', 'Página /turmas — aviso sem próximas turmas', 'text', '' ),
+		array( 'turmas_cta_label', 'dija_turmas', 'Página /turmas — botão dos cards', 'text', '' ),
+		array( 'turmas_wa_message', 'dija_turmas', 'Página /turmas — mensagem enviada no WhatsApp', 'textarea', 'Use os marcadores {turma}, {local}, {endereco}, {dia}, {horario} e {inicio}: o site troca pelos dados da turma clicada.' ),
 
 		array( 'eventos_title', 'dija_eventos', 'Título', 'text', '' ),
 		array( 'eventos_page_intro', 'dija_eventos', 'Texto de abertura da página /eventos', 'textarea', '' ),
+		array( 'eventos_wa_message', 'dija_eventos', 'Página /eventos — mensagem do botão (WhatsApp)', 'textarea', 'Use {evento} para o título do evento clicado.' ),
+		array( 'fotos_title', 'dija_eventos', 'Galeria — título', 'text', '' ),
+		array( 'fotos_intro', 'dija_eventos', 'Galeria — texto', 'textarea', '' ),
+		array( 'fotos_empty', 'dija_eventos', 'Galeria — aviso sem fotos', 'text', '' ),
 
 		array( 'sobre_kicker', 'dija_sobre', 'Título pequeno', 'text', '' ),
 		array( 'sobre_title', 'dija_sobre', 'Título grande', 'text', '' ),
@@ -56,11 +67,14 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 		array( 'sobre_highlight', 'dija_sobre', 'Destaque roxo', 'textarea', 'Cada linha do campo vira uma linha no site.' ),
 		array( 'sobre_accent', 'dija_sobre', 'Destaque final', 'text', '' ),
 		array( 'sobre_photo', 'dija_sobre', 'Foto', 'image', 'Foto quase quadrada; o rosto deve ficar no terço de cima.' ),
+		array( 'sobre_cta_label', 'dija_sobre', 'Botão (página inicial) — texto', 'text', '' ),
+		array( 'sobre_cta_url', 'dija_sobre', 'Botão (página inicial) — link', 'link', 'Padrão: /bio/ (página com a bio completa).' ),
 
 		array( 'contato_title', 'dija_contato', 'Título', 'text', '' ),
 		array( 'contato_text', 'dija_contato', 'Texto', 'textarea', 'Cada linha do campo vira uma linha no site.' ),
 		array( 'contato_button', 'dija_contato', 'Botão do formulário', 'text', '' ),
 		array( 'contato_success', 'dija_contato', 'Mensagem após o envio', 'text', '' ),
+		array( 'contato_email', 'dija_contato', 'E-mail que recebe as mensagens', 'email', 'Cada mensagem enviada pelo formulário chega neste e-mail (e fica salva no menu “Contatos”).' ),
 	);
 
 	foreach ( $fields as [ $key, $section, $label, $type, $desc ] ) {
@@ -69,6 +83,7 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 			'textarea' => 'sanitize_textarea_field',
 			'image'    => 'absint',
 			'link'     => 'dija_sanitize_link',
+			'email'    => 'sanitize_email',
 			default    => 'sanitize_text_field',
 		};
 		$wp_customize->add_setting( $setting, array(
@@ -90,7 +105,7 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 			'label'       => $label,
 			'description' => $desc,
 			'section'     => $section,
-			'type'        => 'textarea' === $type ? 'textarea' : 'text',
+			'type'        => in_array( $type, array( 'textarea', 'email' ), true ) ? $type : 'text',
 		) );
 	}
 } );

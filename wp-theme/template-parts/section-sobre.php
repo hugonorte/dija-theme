@@ -41,6 +41,9 @@ $dija_has_page_text = $dija_is_page && '' !== trim( (string) get_the_content() )
 		<?php if ( dija_mod( 'sobre_accent' ) ) : ?>
 			<p class="h3 h3-accent"><?php echo esc_html( dija_mod( 'sobre_accent' ) ); ?></p>
 		<?php endif; ?>
+		<?php if ( ! $dija_is_page ) : ?>
+			<a class="btn3 brush sobre-cta" href="<?php echo esc_url( dija_link( dija_mod( 'sobre_cta_url' ) ) ); ?>"><?php echo esc_html( dija_mod( 'sobre_cta_label' ) ); ?></a>
+		<?php endif; ?>
 	</div>
 
 	<figure class="media4">

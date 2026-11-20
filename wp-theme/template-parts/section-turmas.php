@@ -1,36 +1,29 @@
 <?php
 /**
- * Seção de turmas (cards).
- *
- * $args:
- *   page (bool) Página /turmas: título vira <h1>, mostra texto de abertura e descrições.
+ * Seção de turmas da página inicial: cards das turmas em andamento.
+ * (A página /turmas completa fica em archive-turma.php.)
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$dija_is_page = ! empty( $args['page'] );
-$dija_turmas  = dija_get_items( 'turma' );
-$dija_tag     = $dija_is_page ? 'h1' : 'h2';
+$dija_turmas = dija_get_turmas( 'andamento' );
 ?>
 <section class="section" id="turmas">
 	<div class="turmas-title">
-		<<?php echo $dija_tag; ?> class="turmas-heading">
+		<h2 class="turmas-heading">
 			<span class="h2"><span class="ico ico-rays" aria-hidden="true"></span><?php echo esc_html( dija_mod( 'turmas_kicker' ) ); ?><span class="ico ico-rays is-flipped" aria-hidden="true"></span></span>
 			<span class="h1 grunge"><?php echo esc_html( dija_mod( 'turmas_title' ) ); ?></span>
-		</<?php echo $dija_tag; ?>>
-		<?php if ( $dija_is_page && dija_mod( 'turmas_page_intro' ) ) : ?>
-			<p class="t1"><?php echo esc_html( dija_mod( 'turmas_page_intro' ) ); ?></p>
-		<?php endif; ?>
-		<span class="img img-scroll" aria-hidden="true"></span>
+		</h2>
+		<a class="img img-scroll" href="<?php echo esc_url( (string) get_post_type_archive_link( 'turma' ) ); ?>" aria-label="Ver todas as turmas e locais"></a>
 	</div>
 
 	<?php if ( $dija_turmas ) : ?>
 		<ul class="cards">
 			<?php foreach ( $dija_turmas as $dija_turma ) {
-				get_template_part( 'template-parts/turma-card', null, array( 'post' => $dija_turma, 'show_desc' => $dija_is_page ) );
+				get_template_part( 'template-parts/turma-card', null, array( 'post' => $dija_turma ) );
 			} ?>
 		</ul>
 	<?php else : ?>
-		<p class="cards-empty">Novas turmas em breve. Fale com a gente pelo contato!</p>
+		<p class="cards-empty"><?php echo esc_html( dija_mod( 'turmas_now_empty' ) ); ?></p>
 	<?php endif; ?>
 </section>
