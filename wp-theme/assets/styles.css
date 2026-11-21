@@ -8,6 +8,21 @@
  * Máscaras e ícones SVG estão embutidos (data URI); as fontes editáveis
  * ficam em assets/icons/.
  */
+/*
+ * Fontes reserva ajustadas: enquanto Oswald / Roboto Condensed carregam, o
+ * navegador usa Arial com o mesmo tamanho e altura delas (size-adjust e
+ * ascent/descent). Assim a troca de fonte não muda a altura dos blocos
+ * (evita deslocamento de layout, métrica CLS do Google). Valores medidos
+ * com fontTools sobre textos do próprio site, peso a peso.
+ */
+@font-face { font-family: "Oswald Fallback"; font-weight: 100 500; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica"); size-adjust: 81.09%; ascent-override: 147.11%; descent-override: 35.64%; line-gap-override: 0%; }
+@font-face { font-family: "Oswald Fallback"; font-weight: 600; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Helvetica Bold"); size-adjust: 80.4%; ascent-override: 148.38%; descent-override: 35.94%; line-gap-override: 0%; }
+@font-face { font-family: "Oswald Fallback"; font-weight: 700 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Helvetica Bold"); size-adjust: 82.31%; ascent-override: 144.93%; descent-override: 35.11%; line-gap-override: 0%; }
+@font-face { font-family: "Roboto Condensed Fallback"; font-weight: 100 400; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica"); size-adjust: 84.54%; ascent-override: 109.74%; descent-override: 28.88%; line-gap-override: 0%; }
+@font-face { font-family: "Roboto Condensed Fallback"; font-weight: 500; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica"); size-adjust: 85.29%; ascent-override: 108.77%; descent-override: 28.62%; line-gap-override: 0%; }
+@font-face { font-family: "Roboto Condensed Fallback"; font-weight: 600; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Helvetica Bold"); size-adjust: 82.32%; ascent-override: 112.7%; descent-override: 29.66%; line-gap-override: 0%; }
+@font-face { font-family: "Roboto Condensed Fallback"; font-weight: 700 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Helvetica Bold"); size-adjust: 82.6%; ascent-override: 112.31%; descent-override: 29.56%; line-gap-override: 0%; }
+
 /* ---------- Design tokens ---------- */
 :root {
   /* 1 unidade = 1px da referência (1536px de largura).
@@ -52,8 +67,8 @@
   --mask-grunge: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Cfilter id=%22f%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.9%22 numOctaves=%222%22 seed=%224%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix type=%22matrix%22 values=%220 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -5 3.9%22/%3E%3C/filter%3E%3Crect width=%22300%22 height=%22300%22 filter=%22url(%23f)%22/%3E%3C/svg%3E");
 
   /* Tipografia */
-  --font-display: "Oswald", "Arial Narrow", sans-serif;
-  --font-text: "Roboto Condensed", "Arial Narrow", sans-serif;
+  --font-display: "Oswald", "Oswald Fallback", sans-serif;
+  --font-text: "Roboto Condensed", "Roboto Condensed Fallback", sans-serif;
 }
 
 /* ---------- Reset ---------- */
@@ -96,9 +111,8 @@ img { display: block; max-width: 100%; }
    A 1ª declaração (url jpg) vale onde image-set() não é entendido. */
 /* Topo (header + nav): proporcional à referência, mas nunca acima de 90px */
 .nav      { height: min(calc(130 * var(--u)), 90px); background-color: var(--paper); z-index: 6; }
-.hero     { height: calc(790 * var(--u)); background-color: var(--ochre);
-            background-image: url("img/bg-hero.jpg");
-            background-image: image-set("img/bg-hero.avif" type("image/avif"), "img/bg-hero.jpg" type("image/jpeg")); }
+/* Hero: a arte de fundo fica na cena animada (.hero-scene-box, mais abaixo) */
+.hero     { height: calc(790 * var(--u)); background-color: var(--ochre); }
 .section  { height: calc(510 * var(--u)); background-color: var(--paper);
             background-image: url("img/bg-turmas.jpg");
             background-image: image-set("img/bg-turmas.avif" type("image/avif"), "img/bg-turmas.jpg" type("image/jpeg")); }
@@ -288,7 +302,7 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 
 /* Foto: absoluta à direita, ancorada na base (encosta na borda rasgada) */
-.media { position: absolute; left: calc(700 * var(--u)); bottom: 0; width: calc(620 * var(--u)); height: calc(720 * var(--u)); }
+.media { position: absolute; z-index: 1; left: calc(700 * var(--u)); bottom: 0; width: calc(620 * var(--u)); height: calc(720 * var(--u)); }
 .media picture, .media3-photo picture { display: block; width: 100%; height: 100%; }
 .media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
 
@@ -719,6 +733,75 @@ textarea.in { height: calc(92 * var(--u)); padding-top: calc(8 * var(--u)); resi
 
 
 /* =====================================================================
+   HERO — CENA ANIMADA
+   O fundo e as camadas (sóis, pássaros, cactos, folhas) ficam numa caixa
+   com a proporção da arte (2912×1440) que cobre o hero como um
+   "background-size: cover"; tudo é posicionado em % dessa caixa, então
+   continua alinhado em qualquer largura de tela.
+   Animações: só transform/opacity (GPU). Só começam com .anim-on (posto
+   pelo app.js depois do carregamento), pausam com .is-paused (hero fora da
+   tela) e não existem para quem pede "reduzir movimento".
+   ===================================================================== */
+.hero-scene { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero-scene-box {
+  --scene-x: 50%;
+  position: absolute; left: var(--scene-x); top: 50%;
+  min-width: 100%; min-height: 100%; aspect-ratio: 2912 / 1440;
+  transform: translate(calc(-1 * var(--scene-x)), -50%);
+  background-color: var(--ochre);
+  background-image: url("img/anim/fundo.jpg");
+  background-image: image-set("img/anim/fundo.avif" type("image/avif"), "img/anim/fundo.jpg" type("image/jpeg"));
+  background-size: 100% 100%;
+}
+.sc { position: absolute; display: block; height: auto; max-width: none; user-select: none; }
+
+/* Posições medidas na arte original (% da caixa) */
+.sc-sun--right { width: 27%; left: 84%; top: -21.7%; }
+.sc-sun--left  { width: 24%; left: -10.6%; top: -20.1%; }
+.sc-cactos-left { width: 11.5%; left: .5%; bottom: 3%; transform-origin: 50% 100%; }
+.sc-cacto      { width: 6.8%; left: 40.3%; bottom: 3%; transform-origin: 50% 100%; }
+.sc-folhas     { transform-origin: 50% 100%; }
+.sc-folhas--left   { width: 14%; left: -1%; bottom: -1.5%; }
+.sc-folhas--center { width: 10%; left: 38.6%; bottom: -1%; }
+
+/* Pássaros: a "faixa" tem a largura da caixa, então translateX em % = % da cena */
+.bird-lane { position: absolute; left: 0; top: var(--y); width: 100%; height: 0; transform: translateX(var(--x0)); }
+.bird-bob  { position: absolute; left: 0; top: 0; width: var(--w); aspect-ratio: 185 / 173; }
+.bird      { position: absolute; inset: 0; width: 100%; }
+.bird--down { opacity: 0; }
+/* Posição parada = a do desenho original; tamanhos (--w) pela metade do original, a pedido */
+.bird-lane--1 { --x0: 44%; --y: 25%; --w: 4%;   --d: 26s; --delay: -9s; }
+.bird-lane--2 { --x0: 35.5%; --y: 5%; --w: 3%;  --d: 31s; --delay: 3s; }
+.bird-lane--3 { --x0: 38%; --y: 15%; --w: 2.5%;   --d: 37s; --delay: 11s; }
+.bird-lane--4 { --x0: 45%; --y: 9%;  --w: 1.3%; --d: 23s; --delay: 17s; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .anim-on .sc-sun--right { animation: sun-spin 140s linear infinite; }
+  .anim-on .sc-sun--left  { animation: sun-spin 180s linear infinite reverse; }
+  .anim-on .sc-folhas--left   { animation: sway 4.6s ease-in-out -1.3s infinite alternate; }
+  .anim-on .sc-folhas--center { animation: sway 3.8s ease-in-out infinite alternate; }
+  .anim-on .sc-cacto       { animation: sway-soft 7s ease-in-out infinite alternate; }
+  .anim-on .sc-cactos-left { animation: sway-soft 8.5s ease-in-out -2s infinite alternate; }
+  .anim-on .bird-lane { animation: fly var(--d) linear var(--delay) infinite both; }
+  .anim-on .bird-bob  { animation: bob 2.6s ease-in-out infinite alternate; }
+  .anim-on .bird--up   { animation: flap-up .56s steps(1, end) infinite; }
+  .anim-on .bird--down { animation: flap-down .56s steps(1, end) infinite; }
+  .anim-on .bird-lane--2 .bird-bob { animation-duration: 3.1s; }
+  .anim-on .bird-lane--3 .bird-bob { animation-duration: 2.2s; animation-delay: -1s; }
+  .anim-on .bird-lane--4 .bird--up, .anim-on .bird-lane--4 .bird--down { animation-duration: .42s; }
+  .anim-on .sc-sun, .anim-on .sc-folhas, .anim-on .sc-cacto, .anim-on .sc-cactos-left, .anim-on .bird-lane { will-change: transform; }
+  .hero-scene-box.is-paused, .hero-scene-box.is-paused * { animation-play-state: paused !important; }
+}
+@keyframes sun-spin  { to { transform: rotate(360deg); } }
+@keyframes sway      { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
+@keyframes sway-soft { from { transform: rotate(-.6deg); } to { transform: rotate(.6deg); } }
+@keyframes fly       { from { transform: translateX(-14%); } to { transform: translateX(106%); } }
+@keyframes bob       { from { transform: translateY(-35%); } to { transform: translateY(35%); } }
+@keyframes flap-up   { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes flap-down { 0% { opacity: 0; } 50% { opacity: 1; } }
+
+
+/* =====================================================================
    CELULAR (< 768px)
    Layout empilhado. Fontes com clamp(mín, vw, máx) para crescer
    suavemente entre 320px e 767px.
@@ -762,9 +845,11 @@ textarea.in { height: calc(92 * var(--u)); padding-top: calc(8 * var(--u)); resi
   /* ---------- HERO ---------- */
   .hero {
     flex-direction: column; align-items: center; text-align: center;
-    min-height: 0; padding: 2rem 2rem calc(2rem + var(--tear)); background-position: 28% center;
+    min-height: 0; padding: 2rem 2rem calc(2rem + var(--tear));
   }
   .hero-text { width: auto; max-width: 100%; }
+  .hero-scene-box { --scene-x: 28%; } /* mesmo enquadramento de antes no celular */
+  .bird-lane { display: none; } /* celular: o texto ocupa o céu do hero; pássaros sobre ele atrapalhariam a leitura */
   .hero-name-1 { font-size: clamp(79px, 24.3vw, 153px); }
   .hero-name-2 { font-size: clamp(56px, 17.1vw, 110px); margin-top: -2px; }
   .rail { min-width: 0; width: min(100%, 440px); min-height: clamp(42px, 11vw, 54px); margin-top: 14px; gap: 10px; padding: 6px 22px; }
@@ -777,7 +862,7 @@ textarea.in { height: calc(92 * var(--u)); padding-top: calc(8 * var(--u)); resi
   .hero-cta { min-width: min(82%, 330px); min-height: clamp(58px, 15vw, 74px); margin-top: 20px; font-size: clamp(20px, 5.6vw, 27px); }
   /* Foto: só a parte de cima (rosto em destaque); encosta na borda rasgada */
   .media {
-    position: relative; left: auto; bottom: auto;
+    position: relative; z-index: 1; left: auto; bottom: auto;
     width: 100%; max-width: 480px; height: auto; aspect-ratio: 3 / 4;
     margin: 12px 0 calc(-1 * (2rem + var(--tear)));
     overflow-x: visible; overflow-y: clip;
