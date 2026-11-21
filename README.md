@@ -171,8 +171,8 @@ Menu **Turmas → Adicionar turma**:
 | Situação | Em andamento / Próxima turma | Define a seção da página `/turmas`. Só “Em andamento” aparece na página inicial |
 | Dia da semana | Segunda | Lista de Segunda a Domingo |
 | Horário | 19h às 20h | Comece pela hora de início: turmas do mesmo dia são ordenadas por ela |
-| Ritmo / estilo de dança | ☑ SAMBA ☑ FORRÓ | Marque **um ou mais**: Samba, Forró, Dança de Salão, Soltinho, Zouk, Bolero, Carimbó, Tango, Kizomba, Sertanejo Universitário, Bachata. No site aparecem juntos, com “e”: “SAMBA e FORRÓ”, “SAMBA, FORRÓ e ZOUK” |
-| Nível | INICIANTE | Escolha um: Iniciante, Intermediário, Avançado ou Infantil |
+| Ritmo / estilo de dança | ☑ SAMBA ☑ FORRÓ | Marque **um ou mais**: Samba, Forró, Dança de Salão, Soltinho, Zouk, Bolero, Carimbó, Tango, Kizomba, Sertanejo Universitário, Bachata, Flashback, Charme, Ritmos. No site aparecem juntos, com “e”: “SAMBA e FORRÓ”, “SAMBA, FORRÓ e ZOUK” |
+| Nível | INICIANTE | Escolha um: Iniciante, Iniciado, Intermediário, Avançado, Aberto ou Infantil |
 | Início (só próximas turmas) | Início em 05/01 | Opcional. Aparece em destaque no card |
 | Cor do card | Vermelho, Verde-azulado, Roxo ou Amarelo-ocre | |
 | Ícone | Sol claro, Lua com estrelas, Estrela ou Sol escuro | |
@@ -191,7 +191,8 @@ Clique em **Publicar**. O título da turma no painel é criado sozinho a
 partir dos campos (ex.: “SEGUNDA · 19h às 20h · SAMBA e FORRÓ INICIANTE”).
 
 > **Turmas cadastradas antes das listas:** ritmos e níveis que eram digitados
-> (ex.: “FORRÓ”, “INICIANTE”) são reconhecidos sozinhos. Se um valor antigo
+> (ex.: “FORRÓ”, “INICIANTE”, inclusive no plural, como “INICIADOS”) são
+> reconhecidos sozinhos. Se um valor antigo
 > não existir nas listas (ex.: “XOTE”), ele continua aparecendo no site e a
 > tela da turma mostra um aviso em vermelho; escolha uma opção da lista e
 > clique em **Atualizar**. Para incluir um ritmo ou nível novo nas listas,
