@@ -28,6 +28,11 @@ defined( 'ABSPATH' ) || exit;
 			<?php endforeach; ?>
 			<a class="btn2 brush" href="<?php echo esc_url( dija_link( dija_mod( 'nav_cta_url' ) ) ); ?>"><?php echo esc_html( dija_mod( 'nav_cta_label' ) ); ?></a>
 		</nav>
+		<?php if ( dija_instagram_url() ) : // Instagram de "Topo e contatos", no Personalizador ?>
+			<a class="nav-social" href="<?php echo esc_url( dija_instagram_url() ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( 'Instagram ' . dija_mod( 'instagram' ) . ' (abre em nova aba)' ); ?>">
+				<span class="ico ico-instagram" aria-hidden="true"></span>
+			</a>
+		<?php endif; ?>
 	</header>
 
 	<main id="conteudo">
