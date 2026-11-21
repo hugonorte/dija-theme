@@ -127,6 +127,11 @@ não são exibidos.
 | Botão — texto / link | “QUERO DANÇAR!”. O link padrão é a página `/turmas/` |
 | Foto | A foto grande à direita |
 
+**Fundo animado:** os sóis giram devagar, os pássaros atravessam o céu (só
+no computador) e os cactos e folhas balançam. A animação faz parte do tema
+e não é editável pelo painel. Quem configurou o celular ou computador para
+**reduzir movimento** vê o fundo parado.
+
 **Foto do destaque:** use PNG ou AVIF **com fundo transparente** (só a
 pessoa recortada), em formato retrato (~3:4) e com pelo menos 1000 px de
 largura. O rosto deve ficar no terço de cima. No celular, aparece só da
@@ -488,6 +493,7 @@ wp-theme/                     → vira wp-content/themes/dija-theme/
     ├── styles.css            Todo o CSS (desktop, depois o bloco do celular)
     ├── app.js                Menu hambúrguer, carrossel e envio do formulário
     ├── img/                  Imagens (AVIF + reserva)
+    │   └── anim/             Fundo do hero e camadas animadas (sol, pássaro, cactos, folhas)
     └── icons/                Fontes SVG dos ícones e máscaras (embutidos no CSS)
 scripts/
 ├── wp.sh                     WP-CLI no Docker
@@ -507,6 +513,22 @@ design-systems/               Protótipo HTML aprovado (fora do git)
 - Código em inglês; textos para o usuário em português do Brasil.
 - Um `<h1>` por página (SEO). As seções recebem `page => true` para usar
   `<h1>` na própria página.
+- **Hero animado** (`template-parts/section-hero.php`, bloco “HERO — CENA
+  ANIMADA” em `styles.css`, fim do `app.js`): o fundo e as camadas ficam numa
+  caixa com a proporção da arte (2912×1440) que cobre o hero; as posições
+  são em % dessa caixa, medidas na arte original. Regras de desempenho:
+  - animar **só `transform` e `opacity`**;
+  - as animações só ligam depois do `load` (classe `anim-on`) e pausam fora
+    da tela (`is-paused`); com `prefers-reduced-motion` não existem;
+  - toda camada `<img>` precisa de `width`/`height` reais e
+    `fetchpriority="low"`; sem as dimensões, ela “pula” ao carregar e piora
+    o CLS.
+  Para trocar uma arte, mantenha o fundo transparente, regenere o WebP e
+  atualize as dimensões em `section-hero.php`.
+- **Fontes reserva ajustadas** (topo do `styles.css`): enquanto Oswald e
+  Roboto Condensed carregam, o navegador usa Arial com as mesmas medidas
+  (`size-adjust`, `ascent-override`). Isso mantém o CLS perto de zero; se
+  trocar as fontes do site, recalcule esses valores.
 - Os ícones SVG ficam embutidos no CSS (data URI). Depois de editar um
   arquivo em `assets/icons/`, atualize a variável `--icon-*` ou `--mask-*`
   correspondente no topo de `styles.css`.

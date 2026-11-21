@@ -7,8 +7,61 @@ defined( 'ABSPATH' ) || exit;
 
 $dija_tagline = dija_lines( dija_mod( 'hero_tagline' ) );
 $dija_last    = count( $dija_tagline ) - 1;
+
+/**
+ * Camada decorativa do fundo animado (imagem leve, baixa prioridade de carregamento).
+ * width/height reservam o espaço antes de a imagem chegar: sem eles, a camada
+ * "pularia" para o lugar ao carregar (deslocamento de layout, métrica CLS).
+ * decoding="auto": a camada aparece junto com o fundo, sem "pipocar" depois.
+ */
+$dija_layer = static function ( string $file, string $class ): void {
+	$sizes = array(
+		'sol.webp'             => array( 660, 660 ),
+		'passaro-1.webp'       => array( 185, 173 ),
+		'passaro-2.webp'       => array( 185, 173 ),
+		'cacto-alto.webp'      => array( 280, 793 ),
+		'cactos-esquerda.webp' => array( 272, 427 ),
+		'folhas.webp'          => array( 379, 288 ),
+	);
+	printf(
+		'<img class="sc %1$s" src="%2$s" width="%3$d" height="%4$d" alt="" decoding="auto" fetchpriority="low" draggable="false">',
+		esc_attr( $class ),
+		esc_url( get_theme_file_uri( 'assets/img/anim/' . $file ) ),
+		$sizes[ $file ][0],
+		$sizes[ $file ][1]
+	);
+};
 ?>
 <section class="hero" id="inicio">
+	<?php
+	/*
+	 * Cena animada do fundo: o fundo (sem sóis, pássaros e cactos) e cada
+	 * elemento numa camada própria, na mesma caixa, para ficarem alinhados.
+	 * Animações só com transform/opacity (GPU), iniciadas depois do carregamento,
+	 * pausadas fora da tela e desligadas com "reduzir movimento" (ver app.js).
+	 */
+	?>
+	<div class="hero-scene" aria-hidden="true">
+		<div class="hero-scene-box" data-hero-scene>
+			<?php
+			$dija_layer( 'sol.webp', 'sc-sun sc-sun--left' );
+			$dija_layer( 'sol.webp', 'sc-sun sc-sun--right' );
+			for ( $dija_i = 1; $dija_i <= 4; $dija_i++ ) : ?>
+				<span class="bird-lane bird-lane--<?php echo (int) $dija_i; ?>" data-bird>
+					<span class="bird-bob">
+						<?php $dija_layer( 'passaro-1.webp', 'bird bird--up' ); ?>
+						<?php $dija_layer( 'passaro-2.webp', 'bird bird--down' ); ?>
+					</span>
+				</span>
+			<?php endfor;
+			$dija_layer( 'cactos-esquerda.webp', 'sc-cactos-left' );
+			$dija_layer( 'folhas.webp', 'sc-folhas sc-folhas--left' );
+			$dija_layer( 'cacto-alto.webp', 'sc-cacto' );
+			$dija_layer( 'folhas.webp', 'sc-folhas sc-folhas--center' );
+			?>
+		</div>
+	</div>
+
 	<div class="hero-text">
 		<h1 class="hero-name">
 			<span class="h1 hero-name-1 grunge"><?php echo esc_html( dija_mod( 'hero_name_1' ) ); ?></span>

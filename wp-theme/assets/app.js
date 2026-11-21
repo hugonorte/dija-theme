@@ -123,3 +123,30 @@ if (zoom && typeof zoom.showModal === 'function') {
   zoom.addEventListener('click', (e) => { if (e.target === zoom) zoom.close(); });
   zoom.addEventListener('close', () => { img.src = ''; });
 }
+
+// Hero animado: começa depois do carregamento (não disputa com a primeira
+// pintura), pausa quando o hero sai da tela e sorteia altura/tamanho de cada
+// pássaro a cada passagem (sempre fora da tela, então não há "pulo").
+const scene = document.querySelector('[data-hero-scene]');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (scene && !reduceMotion.matches) {
+  const start = () => scene.classList.add('anim-on');
+  const whenIdle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 300));
+  if (document.readyState === 'complete') whenIdle(start);
+  else window.addEventListener('load', () => whenIdle(start), { once: true });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      scene.classList.toggle('is-paused', !entry.isIntersecting);
+    }).observe(scene.closest('.hero') || scene);
+  }
+
+  const rand = (min, max) => (min + Math.random() * (max - min)).toFixed(2);
+  scene.querySelectorAll('[data-bird]').forEach((lane) => {
+    lane.addEventListener('animationiteration', (e) => {
+      if (e.target !== lane) return; // ignora o bater de asas e o sobe-e-desce
+      lane.style.setProperty('--y', `${rand(3, 30)}%`);
+      lane.style.setProperty('--w', `${rand(1.2, 4)}%`);
+    });
+  });
+}
