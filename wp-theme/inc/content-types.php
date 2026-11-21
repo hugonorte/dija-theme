@@ -81,6 +81,9 @@ function dija_ritmos(): array {
 		'kizomba'                 => 'KIZOMBA',
 		'sertanejo-universitario' => 'SERTANEJO UNIVERSITÁRIO',
 		'bachata'                 => 'BACHATA',
+		'flashback'               => 'FLASHBACK',
+		'charme'                  => 'CHARME',
+		'ritmos'                  => 'RITMOS',
 	);
 }
 
@@ -88,8 +91,10 @@ function dija_ritmos(): array {
 function dija_niveis(): array {
 	return array(
 		'iniciante'     => 'INICIANTE',
+		'iniciado'      => 'INICIADO',
 		'intermediario' => 'INTERMEDIÁRIO',
 		'avancado'      => 'AVANÇADO',
+		'aberto'        => 'ABERTO',
 		'infantil'      => 'INFANTIL',
 	);
 }
@@ -97,14 +102,16 @@ function dija_niveis(): array {
 /**
  * Encontra a opção correspondente a um texto ("Forró", "FORRÓ", "forro"...).
  * Usado para reconhecer turmas antigas, em que o campo era texto livre.
+ * Ignora o plural final ("INICIADOS" → INICIADO, "AVANÇADOS" → AVANÇADO).
  */
 function dija_option_key( string $text, array $options ): string {
-	$slug = sanitize_title( remove_accents( trim( $text ) ) );
+	$singular = fn( string $slug ): string => preg_replace( '/s$/', '', $slug );
+	$slug     = $singular( sanitize_title( remove_accents( trim( $text ) ) ) );
 	if ( '' === $slug ) {
 		return '';
 	}
 	foreach ( $options as $key => $label ) {
-		if ( $slug === $key || $slug === sanitize_title( remove_accents( $label ) ) ) {
+		if ( $slug === $singular( (string) $key ) || $slug === $singular( sanitize_title( remove_accents( $label ) ) ) ) {
 			return (string) $key;
 		}
 	}
