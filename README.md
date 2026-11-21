@@ -101,7 +101,9 @@ Ao colocar o site no ar pela primeira vez:
 - **Nome no topo**: o texto à esquerda (ex.: DIJA FERREIRA).
 - **Botão do topo — texto / link**: o botão laranja (ex.: MATRICULE-SE → `/contato/`).
 - **Instagram** e **WhatsApp**: digite o `@usuario` e o número com DDD; o
-  site monta os links sozinho. O **WhatsApp** aparece na seção de contato e
+  site monta os links sozinho. O **Instagram** aparece como ícone vermelho à
+  direita do menu do topo (e some se o campo ficar vazio) e na seção de
+  contato. O **WhatsApp** aparece na seção de contato e
   é o número que **recebe as mensagens** dos botões “Quero participar”
   (turmas) e “Saiba mais” (página `/eventos`).
 
@@ -442,6 +444,7 @@ sh scripts/seed-dev.sh
 | Ver o log de erros do PHP | `docker exec dija_wordpress cat /var/www/html/wp-content/debug.log` |
 | Checar a sintaxe do PHP (igual ao CI) | `docker run --rm -v "$PWD/wp-theme:/t:ro" php:8.5-cli sh -c 'find /t -name "*.php" -exec php -l {} \;'` |
 | Parar o ambiente | `docker compose down` (os dados continuam salvos) |
+| **Páginas em branco** (HTTP 200 sem conteúdo) depois de reiniciar o computador | `docker restart dija_wordpress`. Se o container subir antes de o disco do projeto estar montado, ele fica com a pasta do tema vazia; reiniciá-lo refaz a ligação |
 | Apagar tudo, inclusive o banco | `docker compose down -v` |
 
 **Atualizar as versões do WordPress ou do PHP.** As versões ficam fixas

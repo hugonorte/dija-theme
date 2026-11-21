@@ -166,7 +166,17 @@ button, input, textarea { font: inherit; color: inherit; }
   padding: 0 calc(88 * var(--u)) 0 calc(95 * var(--u));
 }
 .logo { font-size: clamp(24px, calc(58 * var(--nf)), 40.15px); letter-spacing: .01em; color: var(--ink); white-space: nowrap; }
-.nav-links { display: flex; align-items: center; gap: calc(57 * var(--u)); }
+.nav-links { display: flex; align-items: center; gap: calc(57 * var(--u)); margin-left: auto; }
+/* Instagram à direita do menu, na cor do botão MATRICULE-SE */
+.nav-social {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  margin-left: calc(26 * var(--nf));
+  width: clamp(36px, calc(56 * var(--nf)), 44px); height: clamp(36px, calc(56 * var(--nf)), 44px);
+  color: var(--rust); border-radius: 50%;
+  transition: color .15s ease, transform .15s ease;
+}
+.nav-social .ico-instagram { color: inherit; width: 77%; height: 77%; } /* 10% maior que os 70% iniciais */
+.nav-social:hover, .nav-social:focus-visible { color: #b8341f; transform: scale(1.08); }
 .nav .lnk, .nav .btn { font-size: clamp(17px, calc(42 * var(--nf)), 29.08px); color: var(--ink); white-space: nowrap; }
 .nav .btn.is-active { color: var(--rust-text); position: relative; }
 .nav .btn.is-active::after {
@@ -722,6 +732,9 @@ textarea.in { height: calc(92 * var(--u)); padding-top: calc(8 * var(--u)); resi
 
   /* ---------- NAV ---------- */
   .nav { height: 64px; padding: 0 16px; }
+  /* celular: logo | Instagram | ☰ (o menu abre por baixo) */
+  .nav-social { order: 2; margin-left: auto; margin-right: 4px; width: 44px; height: 44px; }
+  .nav-toggle { order: 3; }
   .logo { font-size: clamp(22px, 6vw, 30px); }
   .nav-toggle {
     display: flex; flex-direction: column; justify-content: center; gap: 6px;
